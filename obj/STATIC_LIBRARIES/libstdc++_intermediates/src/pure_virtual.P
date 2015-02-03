@@ -1,0 +1,11 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libstdc++_intermediates/src/pure_virtual.o: \
+ bionic/libstdc++/src/pure_virtual.cpp \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ bionic/libc/include/assert.h bionic/libc/include/sys/cdefs.h \
+ bionic/libc/include/sys/cdefs_elf.h \
+ bionic/libc/include/android/api-level.h
+ bionic/libstdc++/src/pure_virtual.cpp :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ bionic/libc/include/assert.h bionic/libc/include/sys/cdefs.h :
+ bionic/libc/include/sys/cdefs_elf.h :
+ bionic/libc/include/android/api-level.h :

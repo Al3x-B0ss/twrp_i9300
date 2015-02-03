@@ -1,0 +1,27 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libc_bionic_intermediates/bionic/getauxval.o: \
+ bionic/libc/bionic/getauxval.cpp \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ /home/lanimereala/android/system/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7/bin/../lib/gcc/arm-linux-androideabi/4.7/include/stddef.h \
+ bionic/libc/include/sys/cdefs.h bionic/libc/include/sys/cdefs_elf.h \
+ bionic/libc/include/android/api-level.h bionic/libc/include/sys/auxv.h \
+ bionic/libc/kernel/common/linux/auxvec.h \
+ bionic/libc/kernel/common/uapi/linux/auxvec.h \
+ bionic/libc/kernel/arch-arm/asm/auxvec.h \
+ bionic/libc/private/bionic_auxv.h bionic/libc/include/elf.h \
+ bionic/libc/include/stdint.h bionic/libc/include/sys/_types.h \
+ bionic/libc/arch-arm/include/machine/_types.h \
+ bionic/libc/include/sys/exec_elf.h bionic/libc/include/inttypes.h \
+ bionic/libc/arch-arm/include/machine/elf_machdep.h
+ bionic/libc/bionic/getauxval.cpp :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ /home/lanimereala/android/system/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7/bin/../lib/gcc/arm-linux-androideabi/4.7/include/stddef.h :
+ bionic/libc/include/sys/cdefs.h bionic/libc/include/sys/cdefs_elf.h :
+ bionic/libc/include/android/api-level.h bionic/libc/include/sys/auxv.h :
+ bionic/libc/kernel/common/linux/auxvec.h :
+ bionic/libc/kernel/common/uapi/linux/auxvec.h :
+ bionic/libc/kernel/arch-arm/asm/auxvec.h :
+ bionic/libc/private/bionic_auxv.h bionic/libc/include/elf.h :
+ bionic/libc/include/stdint.h bionic/libc/include/sys/_types.h :
+ bionic/libc/arch-arm/include/machine/_types.h :
+ bionic/libc/include/sys/exec_elf.h bionic/libc/include/inttypes.h :
+ bionic/libc/arch-arm/include/machine/elf_machdep.h :

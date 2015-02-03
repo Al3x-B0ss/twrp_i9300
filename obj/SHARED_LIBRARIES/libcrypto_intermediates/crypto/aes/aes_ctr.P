@@ -1,0 +1,13 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/SHARED_LIBRARIES/libcrypto_intermediates/crypto/aes/aes_ctr.o: \
+  external/openssl/crypto/aes/aes_ctr.c \
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+  external/openssl/include/openssl/aes.h \
+  external/openssl/include/openssl/opensslconf.h \
+  external/clang/lib/include/stddef.h \
+  external/openssl/include/openssl/modes.h
+  external/openssl/crypto/aes/aes_ctr.c :
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+  external/openssl/include/openssl/aes.h :
+  external/openssl/include/openssl/opensslconf.h :
+  external/clang/lib/include/stddef.h :
+  external/openssl/include/openssl/modes.h :

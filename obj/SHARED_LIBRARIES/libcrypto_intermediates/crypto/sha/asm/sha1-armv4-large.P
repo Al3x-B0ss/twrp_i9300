@@ -1,0 +1,7 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/SHARED_LIBRARIES/libcrypto_intermediates/crypto/sha/asm/sha1-armv4-large.o: \
+  external/openssl/crypto/sha/asm/sha1-armv4-large.S \
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+  external/openssl/crypto/arm_arch.h
+  external/openssl/crypto/sha/asm/sha1-armv4-large.S :
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+  external/openssl/crypto/arm_arch.h :

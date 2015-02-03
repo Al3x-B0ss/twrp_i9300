@@ -1,0 +1,3 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/lib/crtend_so.o: \
+ bionic/libc/arch-arm/bionic/crtend_so.S
+ bionic/libc/arch-arm/bionic/crtend_so.S :

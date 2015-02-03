@@ -1,0 +1,9 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/lib/crtbrand.s: \
+ bionic/libc/bionic/crtbrand.c bionic/libc/include/stdint.h \
+ /home/lanimereala/android/system/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7/bin/../lib/gcc/arm-linux-androideabi/4.7/include/stddef.h \
+ bionic/libc/include/sys/_types.h \
+ bionic/libc/arch-arm/include/machine/_types.h
+ bionic/libc/bionic/crtbrand.c bionic/libc/include/stdint.h :
+ /home/lanimereala/android/system/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7/bin/../lib/gcc/arm-linux-androideabi/4.7/include/stddef.h :
+ bionic/libc/include/sys/_types.h :
+ bionic/libc/arch-arm/include/machine/_types.h :

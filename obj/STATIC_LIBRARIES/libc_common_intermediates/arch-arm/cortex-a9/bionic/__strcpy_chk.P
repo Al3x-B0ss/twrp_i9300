@@ -1,0 +1,11 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libc_common_intermediates/arch-arm/cortex-a9/bionic/__strcpy_chk.o: \
+ bionic/libc/arch-arm/cortex-a9/bionic/__strcpy_chk.S \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ bionic/libc/arch-arm/include/machine/asm.h \
+ bionic/libc/private/libc_events.h \
+ bionic/libc/arch-arm/cortex-a9/bionic/memcpy_base.S
+ bionic/libc/arch-arm/cortex-a9/bionic/__strcpy_chk.S :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ bionic/libc/arch-arm/include/machine/asm.h :
+ bionic/libc/private/libc_events.h :
+ bionic/libc/arch-arm/cortex-a9/bionic/memcpy_base.S :

@@ -1,0 +1,7 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/SHARED_LIBRARIES/libcrypto_intermediates/crypto/modes/asm/ghash-armv4.o: \
+  external/openssl/crypto/modes/asm/ghash-armv4.S \
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+  external/openssl/crypto/arm_arch.h
+  external/openssl/crypto/modes/asm/ghash-armv4.S :
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+  external/openssl/crypto/arm_arch.h :

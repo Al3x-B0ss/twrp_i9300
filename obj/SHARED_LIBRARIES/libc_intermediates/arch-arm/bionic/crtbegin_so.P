@@ -1,0 +1,7 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/SHARED_LIBRARIES/libc_intermediates/arch-arm/bionic/crtbegin_so.o: \
+ bionic/libc/arch-arm/bionic/crtbegin_so.c \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ bionic/libc/private/__dso_handle.h
+ bionic/libc/arch-arm/bionic/crtbegin_so.c :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ bionic/libc/private/__dso_handle.h :

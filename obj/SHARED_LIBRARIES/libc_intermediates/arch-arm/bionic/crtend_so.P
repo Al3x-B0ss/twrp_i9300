@@ -1,0 +1,5 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/SHARED_LIBRARIES/libc_intermediates/arch-arm/bionic/crtend_so.o: \
+ bionic/libc/arch-arm/bionic/crtend_so.S \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h
+ bionic/libc/arch-arm/bionic/crtend_so.S :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :

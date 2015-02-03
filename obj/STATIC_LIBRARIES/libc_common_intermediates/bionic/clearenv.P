@@ -1,0 +1,7 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libc_common_intermediates/bionic/clearenv.o: \
+ bionic/libc/bionic/clearenv.c \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ /home/lanimereala/android/system/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7/bin/../lib/gcc/arm-linux-androideabi/4.7/include/stddef.h
+ bionic/libc/bionic/clearenv.c :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ /home/lanimereala/android/system/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7/bin/../lib/gcc/arm-linux-androideabi/4.7/include/stddef.h :

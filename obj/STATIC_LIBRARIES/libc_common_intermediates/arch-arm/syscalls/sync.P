@@ -1,0 +1,19 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libc_common_intermediates/arch-arm/syscalls/sync.o: \
+ bionic/libc/arch-arm/syscalls/sync.S \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ bionic/libc/kernel/arch-arm/asm/unistd.h \
+ bionic/libc/kernel/common/linux/err.h \
+ bionic/libc/kernel/common/linux/compiler.h \
+ bionic/libc/kernel/arch-arm/asm/errno.h \
+ bionic/libc/kernel/common/asm-generic/errno.h \
+ bionic/libc/kernel/common/asm-generic/errno-base.h \
+ bionic/libc/arch-arm/include/machine/asm.h
+ bionic/libc/arch-arm/syscalls/sync.S :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ bionic/libc/kernel/arch-arm/asm/unistd.h :
+ bionic/libc/kernel/common/linux/err.h :
+ bionic/libc/kernel/common/linux/compiler.h :
+ bionic/libc/kernel/arch-arm/asm/errno.h :
+ bionic/libc/kernel/common/asm-generic/errno.h :
+ bionic/libc/kernel/common/asm-generic/errno-base.h :
+ bionic/libc/arch-arm/include/machine/asm.h :

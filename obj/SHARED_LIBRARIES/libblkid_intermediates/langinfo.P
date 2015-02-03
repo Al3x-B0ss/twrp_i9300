@@ -1,0 +1,7 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/SHARED_LIBRARIES/libblkid_intermediates/langinfo.o: \
+ bootable/recovery/libblkid/langinfo.c \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ bootable/recovery/libblkid/nls.h
+ bootable/recovery/libblkid/langinfo.c :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ bootable/recovery/libblkid/nls.h :

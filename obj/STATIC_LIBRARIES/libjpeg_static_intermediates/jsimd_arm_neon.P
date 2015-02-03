@@ -1,0 +1,5 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libjpeg_static_intermediates/jsimd_arm_neon.o: \
+ external/jpeg/jsimd_arm_neon.S \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h
+ external/jpeg/jsimd_arm_neon.S :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :

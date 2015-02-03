@@ -1,0 +1,9 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libcutils_intermediates/list.o: \
+ system/core/libcutils/list.c \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ system/core/include/cutils/list.h \
+ /home/lanimereala/android/system/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7/bin/../lib/gcc/arm-linux-androideabi/4.7/include/stddef.h
+ system/core/libcutils/list.c :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ system/core/include/cutils/list.h :
+ /home/lanimereala/android/system/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7/bin/../lib/gcc/arm-linux-androideabi/4.7/include/stddef.h :

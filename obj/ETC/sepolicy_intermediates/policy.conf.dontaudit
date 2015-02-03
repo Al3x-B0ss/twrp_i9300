@@ -1,0 +1,7607 @@
+#line 1 "external/sepolicy/security_classes"
+# FLASK
+
+#
+# Define the security object classes
+#
+
+# Classes marked as userspace are classes
+# for userspace object managers
+
+class security
+class process
+class system
+class capability
+
+# file-related classes
+class filesystem
+class file
+class dir
+class fd
+class lnk_file
+class chr_file
+class blk_file
+class sock_file
+class fifo_file
+
+# network-related classes
+class socket
+class tcp_socket
+class udp_socket
+class rawip_socket
+class node
+class netif
+class netlink_socket
+class packet_socket
+class key_socket
+class unix_stream_socket
+class unix_dgram_socket
+
+# sysv-ipc-related classes
+class sem
+class msg
+class msgq
+class shm
+class ipc
+
+#
+# userspace object manager classes
+#
+
+# passwd/chfn/chsh
+class passwd			# userspace
+
+# SE-X Windows stuff (more classes below)
+class x_drawable		# userspace
+class x_screen			# userspace
+class x_gc			# userspace
+class x_font			# userspace
+class x_colormap		# userspace
+class x_property		# userspace
+class x_selection		# userspace
+class x_cursor			# userspace
+class x_client			# userspace
+class x_device			# userspace
+class x_server			# userspace
+class x_extension		# userspace
+
+# extended netlink sockets
+class netlink_route_socket
+class netlink_firewall_socket
+class netlink_tcpdiag_socket
+class netlink_nflog_socket
+class netlink_xfrm_socket
+class netlink_selinux_socket
+class netlink_audit_socket
+class netlink_ip6fw_socket
+class netlink_dnrt_socket
+
+class dbus			# userspace
+class nscd			# userspace
+
+# IPSec association
+class association
+
+# Updated Netlink class for KOBJECT_UEVENT family.
+class netlink_kobject_uevent_socket
+
+class appletalk_socket
+
+class packet
+
+# Kernel access key retention
+class key
+
+class context			# userspace
+
+class dccp_socket
+
+class memprotect
+
+class db_database		# userspace
+class db_table			# userspace
+class db_procedure		# userspace
+class db_column			# userspace
+class db_tuple			# userspace
+class db_blob			# userspace
+
+# network peer labels
+class peer
+
+# Capabilities >= 32
+class capability2
+
+# More SE-X Windows stuff
+class x_resource		# userspace
+class x_event			# userspace
+class x_synthetic_event		# userspace
+class x_application_data	# userspace
+
+# kernel services that need to override task security, e.g. cachefiles
+class kernel_service
+
+class tun_socket
+
+# Still More SE-X Windows stuff
+class x_pointer			# userspace
+class x_keyboard		# userspace
+
+# More Database stuff
+class db_schema			# userspace
+class db_view			# userspace
+class db_sequence		# userspace
+class db_language		# userspace
+
+class binder
+class zygote
+
+# Property service
+class property_service          # userspace
+
+# FLASK
+#line 1 "external/sepolicy/initial_sids"
+# FLASK
+
+#
+# Define initial security identifiers
+#
+
+sid kernel
+sid security
+sid unlabeled
+sid fs
+sid file
+sid file_labels
+sid init
+sid any_socket
+sid port
+sid netif
+sid netmsg
+sid node
+sid igmp_packet
+sid icmp_socket
+sid tcp_socket
+sid sysctl_modprobe
+sid sysctl
+sid sysctl_fs
+sid sysctl_kernel
+sid sysctl_net
+sid sysctl_net_unix
+sid sysctl_vm
+sid sysctl_dev
+sid kmod
+sid policy
+sid scmp_packet
+sid devnull
+
+# FLASK
+#line 1 "external/sepolicy/access_vectors"
+#
+# Define common prefixes for access vectors
+#
+# common common_name { permission_name ... }
+
+
+#
+# Define a common prefix for file access vectors.
+#
+
+common file
+{
+	ioctl
+	read
+	write
+	create
+	getattr
+	setattr
+	lock
+	relabelfrom
+	relabelto
+	append
+	unlink
+	link
+	rename
+	execute
+	swapon
+	quotaon
+	mounton
+}
+
+
+#
+# Define a common prefix for socket access vectors.
+#
+
+common socket
+{
+# inherited from file
+	ioctl
+	read
+	write
+	create
+	getattr
+	setattr
+	lock
+	relabelfrom
+	relabelto
+	append
+# socket-specific
+	bind
+	connect
+	listen
+	accept
+	getopt
+	setopt
+	shutdown
+	recvfrom
+	sendto
+	recv_msg
+	send_msg
+	name_bind
+}
+
+#
+# Define a common prefix for ipc access vectors.
+#
+
+common ipc
+{
+	create
+	destroy
+	getattr
+	setattr
+	read
+	write
+	associate
+	unix_read
+	unix_write
+}
+
+#
+#  Define a common prefix for userspace database object access vectors.
+#
+
+common database
+{
+	create
+	drop
+	getattr
+	setattr
+	relabelfrom
+	relabelto
+}
+
+#
+# Define a common prefix for pointer and keyboard access vectors.
+#
+
+common x_device
+{
+	getattr
+	setattr
+	use
+	read
+	write
+	getfocus
+	setfocus
+	bell
+	force_cursor
+	freeze
+	grab
+	manage
+	list_property
+	get_property
+	set_property
+	add
+	remove
+	create
+	destroy
+}
+
+#
+# Define the access vectors.
+#
+# class class_name [ inherits common_name ] { permission_name ... }
+
+
+#
+# Define the access vector interpretation for file-related objects.
+#
+
+class filesystem
+{
+	mount
+	remount
+	unmount
+	getattr
+	relabelfrom
+	relabelto
+	transition
+	associate
+	quotamod
+	quotaget
+}
+
+class dir
+inherits file
+{
+	add_name
+	remove_name
+	reparent
+	search
+	rmdir
+	open
+	audit_access
+	execmod
+}
+
+class file
+inherits file
+{
+	execute_no_trans
+	entrypoint
+	execmod
+	open
+	audit_access
+}
+
+class lnk_file
+inherits file
+{
+	open
+	audit_access
+	execmod
+}
+
+class chr_file
+inherits file
+{
+	execute_no_trans
+	entrypoint
+	execmod
+	open
+	audit_access
+}
+
+class blk_file
+inherits file
+{
+	open
+	audit_access
+	execmod
+}
+
+class sock_file
+inherits file
+{
+	open
+	audit_access
+	execmod
+}
+
+class fifo_file
+inherits file
+{
+	open
+	audit_access
+	execmod
+}
+
+class fd
+{
+	use
+}
+
+
+#
+# Define the access vector interpretation for network-related objects.
+#
+
+class socket
+inherits socket
+
+class tcp_socket
+inherits socket
+{
+	connectto
+	newconn
+	acceptfrom
+	node_bind
+	name_connect
+}
+
+class udp_socket
+inherits socket
+{
+	node_bind
+}
+
+class rawip_socket
+inherits socket
+{
+	node_bind
+}
+
+class node
+{
+	tcp_recv
+	tcp_send
+	udp_recv
+	udp_send
+	rawip_recv
+	rawip_send
+	enforce_dest
+	dccp_recv
+	dccp_send
+	recvfrom
+	sendto
+}
+
+class netif
+{
+	tcp_recv
+	tcp_send
+	udp_recv
+	udp_send
+	rawip_recv
+	rawip_send
+	dccp_recv
+	dccp_send
+	ingress
+	egress
+}
+
+class netlink_socket
+inherits socket
+
+class packet_socket
+inherits socket
+
+class key_socket
+inherits socket
+
+class unix_stream_socket
+inherits socket
+{
+	connectto
+	newconn
+	acceptfrom
+}
+
+class unix_dgram_socket
+inherits socket
+
+#
+# Define the access vector interpretation for process-related objects
+#
+
+class process
+{
+	fork
+	transition
+	sigchld # commonly granted from child to parent
+	sigkill # cannot be caught or ignored
+	sigstop # cannot be caught or ignored
+	signull # for kill(pid, 0)
+	signal  # all other signals
+	ptrace
+	getsched
+	setsched
+	getsession
+	getpgid
+	setpgid
+	getcap
+	setcap
+	share
+	getattr
+	setexec
+	setfscreate
+	noatsecure
+	siginh
+	setrlimit
+	rlimitinh
+	dyntransition
+	setcurrent
+	execmem
+	execstack
+	execheap
+	setkeycreate
+	setsockcreate
+}
+
+
+#
+# Define the access vector interpretation for ipc-related objects
+#
+
+class ipc
+inherits ipc
+
+class sem
+inherits ipc
+
+class msgq
+inherits ipc
+{
+	enqueue
+}
+
+class msg
+{
+	send
+	receive
+}
+
+class shm
+inherits ipc
+{
+	lock
+}
+
+
+#
+# Define the access vector interpretation for the security server.
+#
+
+class security
+{
+	compute_av
+	compute_create
+	compute_member
+	check_context
+	load_policy
+	compute_relabel
+	compute_user
+	setenforce     # was avc_toggle in system class
+	setbool
+	setsecparam
+	setcheckreqprot
+	read_policy
+}
+
+
+#
+# Define the access vector interpretation for system operations.
+#
+
+class system
+{
+	ipc_info
+	syslog_read
+	syslog_mod
+	syslog_console
+	module_request
+}
+
+#
+# Define the access vector interpretation for controling capabilies
+#
+
+class capability
+{
+	# The capabilities are defined in include/linux/capability.h
+	# Capabilities >= 32 are defined in the capability2 class.
+	# Care should be taken to ensure that these are consistent with
+	# those definitions. (Order matters)
+
+	chown
+	dac_override
+	dac_read_search
+	fowner
+	fsetid
+	kill
+	setgid
+	setuid
+	setpcap
+	linux_immutable
+	net_bind_service
+	net_broadcast
+	net_admin
+	net_raw
+	ipc_lock
+	ipc_owner
+	sys_module
+	sys_rawio
+	sys_chroot
+	sys_ptrace
+	sys_pacct
+	sys_admin
+	sys_boot
+	sys_nice
+	sys_resource
+	sys_time
+	sys_tty_config
+	mknod
+	lease
+	audit_write
+	audit_control
+	setfcap
+}
+
+class capability2
+{
+	mac_override	# unused by SELinux
+	mac_admin	# unused by SELinux
+	syslog
+	wake_alarm
+	block_suspend
+}
+
+#
+# Define the access vector interpretation for controlling
+# changes to passwd information.
+#
+class passwd
+{
+	passwd	# change another user passwd
+	chfn	# change another user finger info
+	chsh	# change another user shell
+	rootok  # pam_rootok check (skip auth)
+	crontab # crontab on another user
+}
+
+#
+# SE-X Windows stuff
+#
+class x_drawable
+{
+	create
+	destroy
+	read
+	write
+	blend
+	getattr
+	setattr
+	list_child
+	add_child
+	remove_child
+	list_property
+	get_property
+	set_property
+	manage
+	override
+	show
+	hide
+	send
+	receive
+}
+
+class x_screen
+{
+	getattr
+	setattr
+	hide_cursor
+	show_cursor
+	saver_getattr
+	saver_setattr
+	saver_hide
+	saver_show
+}
+
+class x_gc
+{
+	create
+	destroy
+	getattr
+	setattr
+	use
+}
+
+class x_font
+{
+	create
+	destroy
+	getattr
+	add_glyph
+	remove_glyph
+	use
+}
+
+class x_colormap
+{
+	create
+	destroy
+	read
+	write
+	getattr
+	add_color
+	remove_color
+	install
+	uninstall
+	use
+}
+
+class x_property
+{
+	create
+	destroy
+	read
+	write
+	append
+	getattr
+	setattr
+}
+
+class x_selection
+{
+	read
+	write
+	getattr
+	setattr
+}
+
+class x_cursor
+{
+	create
+	destroy
+	read
+	write
+	getattr
+	setattr
+	use
+}
+
+class x_client
+{
+	destroy
+	getattr
+	setattr
+	manage
+}
+
+class x_device
+inherits x_device
+
+class x_server
+{
+	getattr
+	setattr
+	record
+	debug
+	grab
+	manage
+}
+
+class x_extension
+{
+	query
+	use
+}
+
+class x_resource
+{
+	read
+	write
+}
+
+class x_event
+{
+	send
+	receive
+}
+
+class x_synthetic_event
+{
+	send
+	receive
+}
+
+#
+# Extended Netlink classes
+#
+class netlink_route_socket
+inherits socket
+{
+	nlmsg_read
+	nlmsg_write
+}
+
+class netlink_firewall_socket
+inherits socket
+{
+	nlmsg_read
+	nlmsg_write
+}
+
+class netlink_tcpdiag_socket
+inherits socket
+{
+	nlmsg_read
+	nlmsg_write
+}
+
+class netlink_nflog_socket
+inherits socket
+
+class netlink_xfrm_socket
+inherits socket
+{
+	nlmsg_read
+	nlmsg_write
+}
+
+class netlink_selinux_socket
+inherits socket
+
+class netlink_audit_socket
+inherits socket
+{
+	nlmsg_read
+	nlmsg_write
+	nlmsg_relay
+	nlmsg_readpriv
+	nlmsg_tty_audit
+}
+
+class netlink_ip6fw_socket
+inherits socket
+{
+	nlmsg_read
+	nlmsg_write
+}
+
+class netlink_dnrt_socket
+inherits socket
+
+# Define the access vector interpretation for controlling
+# access and communication through the D-BUS messaging
+# system.
+#
+class dbus
+{
+	acquire_svc
+	send_msg
+}
+
+# Define the access vector interpretation for controlling
+# access through the name service cache daemon (nscd).
+#
+class nscd
+{
+	getpwd
+	getgrp
+	gethost
+	getstat
+	admin
+	shmempwd
+	shmemgrp
+	shmemhost
+	getserv
+	shmemserv
+}
+
+# Define the access vector interpretation for controlling
+# access to IPSec network data by association
+#
+class association
+{
+	sendto
+	recvfrom
+	setcontext
+	polmatch
+}
+
+# Updated Netlink class for KOBJECT_UEVENT family.
+class netlink_kobject_uevent_socket
+inherits socket
+
+class appletalk_socket
+inherits socket
+
+class packet
+{
+	send
+	recv
+	relabelto
+	flow_in		# deprecated
+	flow_out	# deprecated
+	forward_in
+	forward_out
+}
+
+class key
+{
+	view
+	read
+	write
+	search
+	link
+	setattr
+	create
+}
+
+class context
+{
+	translate
+	contains
+}
+
+class dccp_socket
+inherits socket
+{
+	node_bind
+	name_connect
+}
+
+class memprotect
+{
+	mmap_zero
+}
+
+class db_database
+inherits database
+{
+	access
+	install_module
+	load_module
+	get_param	# deprecated
+	set_param	# deprecated
+}
+
+class db_table
+inherits database
+{
+	use		# deprecated
+	select
+	update
+	insert
+	delete
+	lock
+}
+
+class db_procedure
+inherits database
+{
+	execute
+	entrypoint
+	install
+}
+
+class db_column
+inherits database
+{
+	use		# deprecated
+	select
+	update
+	insert
+}
+
+class db_tuple
+{
+	relabelfrom
+	relabelto
+	use		# deprecated
+	select
+	update
+	insert
+	delete
+}
+
+class db_blob
+inherits database
+{
+	read
+	write
+	import
+	export
+}
+
+# network peer labels
+class peer
+{
+	recv
+}
+
+class x_application_data
+{
+	paste
+	paste_after_confirm
+	copy
+}
+
+class kernel_service
+{
+	use_as_override
+	create_files_as
+}
+
+class tun_socket
+inherits socket
+
+class x_pointer
+inherits x_device
+
+class x_keyboard
+inherits x_device
+
+class db_schema
+inherits database
+{
+	search
+	add_name
+	remove_name
+}
+
+class db_view
+inherits database
+{
+	expand
+}
+
+class db_sequence
+inherits database
+{
+	get_value
+	next_value
+	set_value
+}
+
+class db_language
+inherits database
+{
+	implement
+	execute
+}
+
+class binder
+{
+	impersonate
+	call
+	set_context_mgr
+	transfer
+}
+
+class zygote
+{
+	specifyids
+	specifyrlimits
+	specifycapabilities
+	specifyinvokewith
+	specifyseinfo
+}
+
+class property_service
+{
+	set
+}
+#line 1 "external/sepolicy/global_macros"
+#####################################
+# Common groupings of object classes.
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#####################################
+# Common groupings of permissions.
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#####################################
+# Common socket permission sets.
+
+
+#line 1 "external/sepolicy/mls_macros"
+########################################
+#
+# gen_cats(N)
+#
+# declares categores c0 to c(N-1)
+#
+#line 10
+
+
+
+
+########################################
+#
+# gen_sens(N)
+#
+# declares sensitivites s0 to s(N-1) with dominance
+# in increasing numeric order with s0 lowest, s(N-1) highest
+#
+#line 24
+
+
+
+
+#line 34
+
+
+########################################
+#
+# gen_levels(N,M)
+#
+# levels from s0 to (N-1) with categories c0 to (M-1)
+#
+#line 45
+
+
+
+
+########################################
+#
+# Basic level names for system low and high
+#
+
+
+#line 1 "external/sepolicy/mls"
+#########################################
+# MLS declarations
+#
+
+# Generate the desired number of sensitivities and categories.
+
+#line 6
+# Each sensitivity has a name and zero or more aliases.
+#line 6
+sensitivity s0;
+#line 6
+
+#line 6
+
+#line 6
+# Define the ordering of the sensitivity levels (least to greatest)
+#line 6
+dominance { s0  }
+#line 6
+
+category c0;
+#line 7
+category c1;
+#line 7
+category c2;
+#line 7
+category c3;
+#line 7
+category c4;
+#line 7
+category c5;
+#line 7
+category c6;
+#line 7
+category c7;
+#line 7
+category c8;
+#line 7
+category c9;
+#line 7
+category c10;
+#line 7
+category c11;
+#line 7
+category c12;
+#line 7
+category c13;
+#line 7
+category c14;
+#line 7
+category c15;
+#line 7
+category c16;
+#line 7
+category c17;
+#line 7
+category c18;
+#line 7
+category c19;
+#line 7
+category c20;
+#line 7
+category c21;
+#line 7
+category c22;
+#line 7
+category c23;
+#line 7
+category c24;
+#line 7
+category c25;
+#line 7
+category c26;
+#line 7
+category c27;
+#line 7
+category c28;
+#line 7
+category c29;
+#line 7
+category c30;
+#line 7
+category c31;
+#line 7
+category c32;
+#line 7
+category c33;
+#line 7
+category c34;
+#line 7
+category c35;
+#line 7
+category c36;
+#line 7
+category c37;
+#line 7
+category c38;
+#line 7
+category c39;
+#line 7
+category c40;
+#line 7
+category c41;
+#line 7
+category c42;
+#line 7
+category c43;
+#line 7
+category c44;
+#line 7
+category c45;
+#line 7
+category c46;
+#line 7
+category c47;
+#line 7
+category c48;
+#line 7
+category c49;
+#line 7
+category c50;
+#line 7
+category c51;
+#line 7
+category c52;
+#line 7
+category c53;
+#line 7
+category c54;
+#line 7
+category c55;
+#line 7
+category c56;
+#line 7
+category c57;
+#line 7
+category c58;
+#line 7
+category c59;
+#line 7
+category c60;
+#line 7
+category c61;
+#line 7
+category c62;
+#line 7
+category c63;
+#line 7
+category c64;
+#line 7
+category c65;
+#line 7
+category c66;
+#line 7
+category c67;
+#line 7
+category c68;
+#line 7
+category c69;
+#line 7
+category c70;
+#line 7
+category c71;
+#line 7
+category c72;
+#line 7
+category c73;
+#line 7
+category c74;
+#line 7
+category c75;
+#line 7
+category c76;
+#line 7
+category c77;
+#line 7
+category c78;
+#line 7
+category c79;
+#line 7
+category c80;
+#line 7
+category c81;
+#line 7
+category c82;
+#line 7
+category c83;
+#line 7
+category c84;
+#line 7
+category c85;
+#line 7
+category c86;
+#line 7
+category c87;
+#line 7
+category c88;
+#line 7
+category c89;
+#line 7
+category c90;
+#line 7
+category c91;
+#line 7
+category c92;
+#line 7
+category c93;
+#line 7
+category c94;
+#line 7
+category c95;
+#line 7
+category c96;
+#line 7
+category c97;
+#line 7
+category c98;
+#line 7
+category c99;
+#line 7
+category c100;
+#line 7
+category c101;
+#line 7
+category c102;
+#line 7
+category c103;
+#line 7
+category c104;
+#line 7
+category c105;
+#line 7
+category c106;
+#line 7
+category c107;
+#line 7
+category c108;
+#line 7
+category c109;
+#line 7
+category c110;
+#line 7
+category c111;
+#line 7
+category c112;
+#line 7
+category c113;
+#line 7
+category c114;
+#line 7
+category c115;
+#line 7
+category c116;
+#line 7
+category c117;
+#line 7
+category c118;
+#line 7
+category c119;
+#line 7
+category c120;
+#line 7
+category c121;
+#line 7
+category c122;
+#line 7
+category c123;
+#line 7
+category c124;
+#line 7
+category c125;
+#line 7
+category c126;
+#line 7
+category c127;
+#line 7
+category c128;
+#line 7
+category c129;
+#line 7
+category c130;
+#line 7
+category c131;
+#line 7
+category c132;
+#line 7
+category c133;
+#line 7
+category c134;
+#line 7
+category c135;
+#line 7
+category c136;
+#line 7
+category c137;
+#line 7
+category c138;
+#line 7
+category c139;
+#line 7
+category c140;
+#line 7
+category c141;
+#line 7
+category c142;
+#line 7
+category c143;
+#line 7
+category c144;
+#line 7
+category c145;
+#line 7
+category c146;
+#line 7
+category c147;
+#line 7
+category c148;
+#line 7
+category c149;
+#line 7
+category c150;
+#line 7
+category c151;
+#line 7
+category c152;
+#line 7
+category c153;
+#line 7
+category c154;
+#line 7
+category c155;
+#line 7
+category c156;
+#line 7
+category c157;
+#line 7
+category c158;
+#line 7
+category c159;
+#line 7
+category c160;
+#line 7
+category c161;
+#line 7
+category c162;
+#line 7
+category c163;
+#line 7
+category c164;
+#line 7
+category c165;
+#line 7
+category c166;
+#line 7
+category c167;
+#line 7
+category c168;
+#line 7
+category c169;
+#line 7
+category c170;
+#line 7
+category c171;
+#line 7
+category c172;
+#line 7
+category c173;
+#line 7
+category c174;
+#line 7
+category c175;
+#line 7
+category c176;
+#line 7
+category c177;
+#line 7
+category c178;
+#line 7
+category c179;
+#line 7
+category c180;
+#line 7
+category c181;
+#line 7
+category c182;
+#line 7
+category c183;
+#line 7
+category c184;
+#line 7
+category c185;
+#line 7
+category c186;
+#line 7
+category c187;
+#line 7
+category c188;
+#line 7
+category c189;
+#line 7
+category c190;
+#line 7
+category c191;
+#line 7
+category c192;
+#line 7
+category c193;
+#line 7
+category c194;
+#line 7
+category c195;
+#line 7
+category c196;
+#line 7
+category c197;
+#line 7
+category c198;
+#line 7
+category c199;
+#line 7
+category c200;
+#line 7
+category c201;
+#line 7
+category c202;
+#line 7
+category c203;
+#line 7
+category c204;
+#line 7
+category c205;
+#line 7
+category c206;
+#line 7
+category c207;
+#line 7
+category c208;
+#line 7
+category c209;
+#line 7
+category c210;
+#line 7
+category c211;
+#line 7
+category c212;
+#line 7
+category c213;
+#line 7
+category c214;
+#line 7
+category c215;
+#line 7
+category c216;
+#line 7
+category c217;
+#line 7
+category c218;
+#line 7
+category c219;
+#line 7
+category c220;
+#line 7
+category c221;
+#line 7
+category c222;
+#line 7
+category c223;
+#line 7
+category c224;
+#line 7
+category c225;
+#line 7
+category c226;
+#line 7
+category c227;
+#line 7
+category c228;
+#line 7
+category c229;
+#line 7
+category c230;
+#line 7
+category c231;
+#line 7
+category c232;
+#line 7
+category c233;
+#line 7
+category c234;
+#line 7
+category c235;
+#line 7
+category c236;
+#line 7
+category c237;
+#line 7
+category c238;
+#line 7
+category c239;
+#line 7
+category c240;
+#line 7
+category c241;
+#line 7
+category c242;
+#line 7
+category c243;
+#line 7
+category c244;
+#line 7
+category c245;
+#line 7
+category c246;
+#line 7
+category c247;
+#line 7
+category c248;
+#line 7
+category c249;
+#line 7
+category c250;
+#line 7
+category c251;
+#line 7
+category c252;
+#line 7
+category c253;
+#line 7
+category c254;
+#line 7
+category c255;
+#line 7
+category c256;
+#line 7
+category c257;
+#line 7
+category c258;
+#line 7
+category c259;
+#line 7
+category c260;
+#line 7
+category c261;
+#line 7
+category c262;
+#line 7
+category c263;
+#line 7
+category c264;
+#line 7
+category c265;
+#line 7
+category c266;
+#line 7
+category c267;
+#line 7
+category c268;
+#line 7
+category c269;
+#line 7
+category c270;
+#line 7
+category c271;
+#line 7
+category c272;
+#line 7
+category c273;
+#line 7
+category c274;
+#line 7
+category c275;
+#line 7
+category c276;
+#line 7
+category c277;
+#line 7
+category c278;
+#line 7
+category c279;
+#line 7
+category c280;
+#line 7
+category c281;
+#line 7
+category c282;
+#line 7
+category c283;
+#line 7
+category c284;
+#line 7
+category c285;
+#line 7
+category c286;
+#line 7
+category c287;
+#line 7
+category c288;
+#line 7
+category c289;
+#line 7
+category c290;
+#line 7
+category c291;
+#line 7
+category c292;
+#line 7
+category c293;
+#line 7
+category c294;
+#line 7
+category c295;
+#line 7
+category c296;
+#line 7
+category c297;
+#line 7
+category c298;
+#line 7
+category c299;
+#line 7
+category c300;
+#line 7
+category c301;
+#line 7
+category c302;
+#line 7
+category c303;
+#line 7
+category c304;
+#line 7
+category c305;
+#line 7
+category c306;
+#line 7
+category c307;
+#line 7
+category c308;
+#line 7
+category c309;
+#line 7
+category c310;
+#line 7
+category c311;
+#line 7
+category c312;
+#line 7
+category c313;
+#line 7
+category c314;
+#line 7
+category c315;
+#line 7
+category c316;
+#line 7
+category c317;
+#line 7
+category c318;
+#line 7
+category c319;
+#line 7
+category c320;
+#line 7
+category c321;
+#line 7
+category c322;
+#line 7
+category c323;
+#line 7
+category c324;
+#line 7
+category c325;
+#line 7
+category c326;
+#line 7
+category c327;
+#line 7
+category c328;
+#line 7
+category c329;
+#line 7
+category c330;
+#line 7
+category c331;
+#line 7
+category c332;
+#line 7
+category c333;
+#line 7
+category c334;
+#line 7
+category c335;
+#line 7
+category c336;
+#line 7
+category c337;
+#line 7
+category c338;
+#line 7
+category c339;
+#line 7
+category c340;
+#line 7
+category c341;
+#line 7
+category c342;
+#line 7
+category c343;
+#line 7
+category c344;
+#line 7
+category c345;
+#line 7
+category c346;
+#line 7
+category c347;
+#line 7
+category c348;
+#line 7
+category c349;
+#line 7
+category c350;
+#line 7
+category c351;
+#line 7
+category c352;
+#line 7
+category c353;
+#line 7
+category c354;
+#line 7
+category c355;
+#line 7
+category c356;
+#line 7
+category c357;
+#line 7
+category c358;
+#line 7
+category c359;
+#line 7
+category c360;
+#line 7
+category c361;
+#line 7
+category c362;
+#line 7
+category c363;
+#line 7
+category c364;
+#line 7
+category c365;
+#line 7
+category c366;
+#line 7
+category c367;
+#line 7
+category c368;
+#line 7
+category c369;
+#line 7
+category c370;
+#line 7
+category c371;
+#line 7
+category c372;
+#line 7
+category c373;
+#line 7
+category c374;
+#line 7
+category c375;
+#line 7
+category c376;
+#line 7
+category c377;
+#line 7
+category c378;
+#line 7
+category c379;
+#line 7
+category c380;
+#line 7
+category c381;
+#line 7
+category c382;
+#line 7
+category c383;
+#line 7
+category c384;
+#line 7
+category c385;
+#line 7
+category c386;
+#line 7
+category c387;
+#line 7
+category c388;
+#line 7
+category c389;
+#line 7
+category c390;
+#line 7
+category c391;
+#line 7
+category c392;
+#line 7
+category c393;
+#line 7
+category c394;
+#line 7
+category c395;
+#line 7
+category c396;
+#line 7
+category c397;
+#line 7
+category c398;
+#line 7
+category c399;
+#line 7
+category c400;
+#line 7
+category c401;
+#line 7
+category c402;
+#line 7
+category c403;
+#line 7
+category c404;
+#line 7
+category c405;
+#line 7
+category c406;
+#line 7
+category c407;
+#line 7
+category c408;
+#line 7
+category c409;
+#line 7
+category c410;
+#line 7
+category c411;
+#line 7
+category c412;
+#line 7
+category c413;
+#line 7
+category c414;
+#line 7
+category c415;
+#line 7
+category c416;
+#line 7
+category c417;
+#line 7
+category c418;
+#line 7
+category c419;
+#line 7
+category c420;
+#line 7
+category c421;
+#line 7
+category c422;
+#line 7
+category c423;
+#line 7
+category c424;
+#line 7
+category c425;
+#line 7
+category c426;
+#line 7
+category c427;
+#line 7
+category c428;
+#line 7
+category c429;
+#line 7
+category c430;
+#line 7
+category c431;
+#line 7
+category c432;
+#line 7
+category c433;
+#line 7
+category c434;
+#line 7
+category c435;
+#line 7
+category c436;
+#line 7
+category c437;
+#line 7
+category c438;
+#line 7
+category c439;
+#line 7
+category c440;
+#line 7
+category c441;
+#line 7
+category c442;
+#line 7
+category c443;
+#line 7
+category c444;
+#line 7
+category c445;
+#line 7
+category c446;
+#line 7
+category c447;
+#line 7
+category c448;
+#line 7
+category c449;
+#line 7
+category c450;
+#line 7
+category c451;
+#line 7
+category c452;
+#line 7
+category c453;
+#line 7
+category c454;
+#line 7
+category c455;
+#line 7
+category c456;
+#line 7
+category c457;
+#line 7
+category c458;
+#line 7
+category c459;
+#line 7
+category c460;
+#line 7
+category c461;
+#line 7
+category c462;
+#line 7
+category c463;
+#line 7
+category c464;
+#line 7
+category c465;
+#line 7
+category c466;
+#line 7
+category c467;
+#line 7
+category c468;
+#line 7
+category c469;
+#line 7
+category c470;
+#line 7
+category c471;
+#line 7
+category c472;
+#line 7
+category c473;
+#line 7
+category c474;
+#line 7
+category c475;
+#line 7
+category c476;
+#line 7
+category c477;
+#line 7
+category c478;
+#line 7
+category c479;
+#line 7
+category c480;
+#line 7
+category c481;
+#line 7
+category c482;
+#line 7
+category c483;
+#line 7
+category c484;
+#line 7
+category c485;
+#line 7
+category c486;
+#line 7
+category c487;
+#line 7
+category c488;
+#line 7
+category c489;
+#line 7
+category c490;
+#line 7
+category c491;
+#line 7
+category c492;
+#line 7
+category c493;
+#line 7
+category c494;
+#line 7
+category c495;
+#line 7
+category c496;
+#line 7
+category c497;
+#line 7
+category c498;
+#line 7
+category c499;
+#line 7
+category c500;
+#line 7
+category c501;
+#line 7
+category c502;
+#line 7
+category c503;
+#line 7
+category c504;
+#line 7
+category c505;
+#line 7
+category c506;
+#line 7
+category c507;
+#line 7
+category c508;
+#line 7
+category c509;
+#line 7
+category c510;
+#line 7
+category c511;
+#line 7
+category c512;
+#line 7
+category c513;
+#line 7
+category c514;
+#line 7
+category c515;
+#line 7
+category c516;
+#line 7
+category c517;
+#line 7
+category c518;
+#line 7
+category c519;
+#line 7
+category c520;
+#line 7
+category c521;
+#line 7
+category c522;
+#line 7
+category c523;
+#line 7
+category c524;
+#line 7
+category c525;
+#line 7
+category c526;
+#line 7
+category c527;
+#line 7
+category c528;
+#line 7
+category c529;
+#line 7
+category c530;
+#line 7
+category c531;
+#line 7
+category c532;
+#line 7
+category c533;
+#line 7
+category c534;
+#line 7
+category c535;
+#line 7
+category c536;
+#line 7
+category c537;
+#line 7
+category c538;
+#line 7
+category c539;
+#line 7
+category c540;
+#line 7
+category c541;
+#line 7
+category c542;
+#line 7
+category c543;
+#line 7
+category c544;
+#line 7
+category c545;
+#line 7
+category c546;
+#line 7
+category c547;
+#line 7
+category c548;
+#line 7
+category c549;
+#line 7
+category c550;
+#line 7
+category c551;
+#line 7
+category c552;
+#line 7
+category c553;
+#line 7
+category c554;
+#line 7
+category c555;
+#line 7
+category c556;
+#line 7
+category c557;
+#line 7
+category c558;
+#line 7
+category c559;
+#line 7
+category c560;
+#line 7
+category c561;
+#line 7
+category c562;
+#line 7
+category c563;
+#line 7
+category c564;
+#line 7
+category c565;
+#line 7
+category c566;
+#line 7
+category c567;
+#line 7
+category c568;
+#line 7
+category c569;
+#line 7
+category c570;
+#line 7
+category c571;
+#line 7
+category c572;
+#line 7
+category c573;
+#line 7
+category c574;
+#line 7
+category c575;
+#line 7
+category c576;
+#line 7
+category c577;
+#line 7
+category c578;
+#line 7
+category c579;
+#line 7
+category c580;
+#line 7
+category c581;
+#line 7
+category c582;
+#line 7
+category c583;
+#line 7
+category c584;
+#line 7
+category c585;
+#line 7
+category c586;
+#line 7
+category c587;
+#line 7
+category c588;
+#line 7
+category c589;
+#line 7
+category c590;
+#line 7
+category c591;
+#line 7
+category c592;
+#line 7
+category c593;
+#line 7
+category c594;
+#line 7
+category c595;
+#line 7
+category c596;
+#line 7
+category c597;
+#line 7
+category c598;
+#line 7
+category c599;
+#line 7
+category c600;
+#line 7
+category c601;
+#line 7
+category c602;
+#line 7
+category c603;
+#line 7
+category c604;
+#line 7
+category c605;
+#line 7
+category c606;
+#line 7
+category c607;
+#line 7
+category c608;
+#line 7
+category c609;
+#line 7
+category c610;
+#line 7
+category c611;
+#line 7
+category c612;
+#line 7
+category c613;
+#line 7
+category c614;
+#line 7
+category c615;
+#line 7
+category c616;
+#line 7
+category c617;
+#line 7
+category c618;
+#line 7
+category c619;
+#line 7
+category c620;
+#line 7
+category c621;
+#line 7
+category c622;
+#line 7
+category c623;
+#line 7
+category c624;
+#line 7
+category c625;
+#line 7
+category c626;
+#line 7
+category c627;
+#line 7
+category c628;
+#line 7
+category c629;
+#line 7
+category c630;
+#line 7
+category c631;
+#line 7
+category c632;
+#line 7
+category c633;
+#line 7
+category c634;
+#line 7
+category c635;
+#line 7
+category c636;
+#line 7
+category c637;
+#line 7
+category c638;
+#line 7
+category c639;
+#line 7
+category c640;
+#line 7
+category c641;
+#line 7
+category c642;
+#line 7
+category c643;
+#line 7
+category c644;
+#line 7
+category c645;
+#line 7
+category c646;
+#line 7
+category c647;
+#line 7
+category c648;
+#line 7
+category c649;
+#line 7
+category c650;
+#line 7
+category c651;
+#line 7
+category c652;
+#line 7
+category c653;
+#line 7
+category c654;
+#line 7
+category c655;
+#line 7
+category c656;
+#line 7
+category c657;
+#line 7
+category c658;
+#line 7
+category c659;
+#line 7
+category c660;
+#line 7
+category c661;
+#line 7
+category c662;
+#line 7
+category c663;
+#line 7
+category c664;
+#line 7
+category c665;
+#line 7
+category c666;
+#line 7
+category c667;
+#line 7
+category c668;
+#line 7
+category c669;
+#line 7
+category c670;
+#line 7
+category c671;
+#line 7
+category c672;
+#line 7
+category c673;
+#line 7
+category c674;
+#line 7
+category c675;
+#line 7
+category c676;
+#line 7
+category c677;
+#line 7
+category c678;
+#line 7
+category c679;
+#line 7
+category c680;
+#line 7
+category c681;
+#line 7
+category c682;
+#line 7
+category c683;
+#line 7
+category c684;
+#line 7
+category c685;
+#line 7
+category c686;
+#line 7
+category c687;
+#line 7
+category c688;
+#line 7
+category c689;
+#line 7
+category c690;
+#line 7
+category c691;
+#line 7
+category c692;
+#line 7
+category c693;
+#line 7
+category c694;
+#line 7
+category c695;
+#line 7
+category c696;
+#line 7
+category c697;
+#line 7
+category c698;
+#line 7
+category c699;
+#line 7
+category c700;
+#line 7
+category c701;
+#line 7
+category c702;
+#line 7
+category c703;
+#line 7
+category c704;
+#line 7
+category c705;
+#line 7
+category c706;
+#line 7
+category c707;
+#line 7
+category c708;
+#line 7
+category c709;
+#line 7
+category c710;
+#line 7
+category c711;
+#line 7
+category c712;
+#line 7
+category c713;
+#line 7
+category c714;
+#line 7
+category c715;
+#line 7
+category c716;
+#line 7
+category c717;
+#line 7
+category c718;
+#line 7
+category c719;
+#line 7
+category c720;
+#line 7
+category c721;
+#line 7
+category c722;
+#line 7
+category c723;
+#line 7
+category c724;
+#line 7
+category c725;
+#line 7
+category c726;
+#line 7
+category c727;
+#line 7
+category c728;
+#line 7
+category c729;
+#line 7
+category c730;
+#line 7
+category c731;
+#line 7
+category c732;
+#line 7
+category c733;
+#line 7
+category c734;
+#line 7
+category c735;
+#line 7
+category c736;
+#line 7
+category c737;
+#line 7
+category c738;
+#line 7
+category c739;
+#line 7
+category c740;
+#line 7
+category c741;
+#line 7
+category c742;
+#line 7
+category c743;
+#line 7
+category c744;
+#line 7
+category c745;
+#line 7
+category c746;
+#line 7
+category c747;
+#line 7
+category c748;
+#line 7
+category c749;
+#line 7
+category c750;
+#line 7
+category c751;
+#line 7
+category c752;
+#line 7
+category c753;
+#line 7
+category c754;
+#line 7
+category c755;
+#line 7
+category c756;
+#line 7
+category c757;
+#line 7
+category c758;
+#line 7
+category c759;
+#line 7
+category c760;
+#line 7
+category c761;
+#line 7
+category c762;
+#line 7
+category c763;
+#line 7
+category c764;
+#line 7
+category c765;
+#line 7
+category c766;
+#line 7
+category c767;
+#line 7
+category c768;
+#line 7
+category c769;
+#line 7
+category c770;
+#line 7
+category c771;
+#line 7
+category c772;
+#line 7
+category c773;
+#line 7
+category c774;
+#line 7
+category c775;
+#line 7
+category c776;
+#line 7
+category c777;
+#line 7
+category c778;
+#line 7
+category c779;
+#line 7
+category c780;
+#line 7
+category c781;
+#line 7
+category c782;
+#line 7
+category c783;
+#line 7
+category c784;
+#line 7
+category c785;
+#line 7
+category c786;
+#line 7
+category c787;
+#line 7
+category c788;
+#line 7
+category c789;
+#line 7
+category c790;
+#line 7
+category c791;
+#line 7
+category c792;
+#line 7
+category c793;
+#line 7
+category c794;
+#line 7
+category c795;
+#line 7
+category c796;
+#line 7
+category c797;
+#line 7
+category c798;
+#line 7
+category c799;
+#line 7
+category c800;
+#line 7
+category c801;
+#line 7
+category c802;
+#line 7
+category c803;
+#line 7
+category c804;
+#line 7
+category c805;
+#line 7
+category c806;
+#line 7
+category c807;
+#line 7
+category c808;
+#line 7
+category c809;
+#line 7
+category c810;
+#line 7
+category c811;
+#line 7
+category c812;
+#line 7
+category c813;
+#line 7
+category c814;
+#line 7
+category c815;
+#line 7
+category c816;
+#line 7
+category c817;
+#line 7
+category c818;
+#line 7
+category c819;
+#line 7
+category c820;
+#line 7
+category c821;
+#line 7
+category c822;
+#line 7
+category c823;
+#line 7
+category c824;
+#line 7
+category c825;
+#line 7
+category c826;
+#line 7
+category c827;
+#line 7
+category c828;
+#line 7
+category c829;
+#line 7
+category c830;
+#line 7
+category c831;
+#line 7
+category c832;
+#line 7
+category c833;
+#line 7
+category c834;
+#line 7
+category c835;
+#line 7
+category c836;
+#line 7
+category c837;
+#line 7
+category c838;
+#line 7
+category c839;
+#line 7
+category c840;
+#line 7
+category c841;
+#line 7
+category c842;
+#line 7
+category c843;
+#line 7
+category c844;
+#line 7
+category c845;
+#line 7
+category c846;
+#line 7
+category c847;
+#line 7
+category c848;
+#line 7
+category c849;
+#line 7
+category c850;
+#line 7
+category c851;
+#line 7
+category c852;
+#line 7
+category c853;
+#line 7
+category c854;
+#line 7
+category c855;
+#line 7
+category c856;
+#line 7
+category c857;
+#line 7
+category c858;
+#line 7
+category c859;
+#line 7
+category c860;
+#line 7
+category c861;
+#line 7
+category c862;
+#line 7
+category c863;
+#line 7
+category c864;
+#line 7
+category c865;
+#line 7
+category c866;
+#line 7
+category c867;
+#line 7
+category c868;
+#line 7
+category c869;
+#line 7
+category c870;
+#line 7
+category c871;
+#line 7
+category c872;
+#line 7
+category c873;
+#line 7
+category c874;
+#line 7
+category c875;
+#line 7
+category c876;
+#line 7
+category c877;
+#line 7
+category c878;
+#line 7
+category c879;
+#line 7
+category c880;
+#line 7
+category c881;
+#line 7
+category c882;
+#line 7
+category c883;
+#line 7
+category c884;
+#line 7
+category c885;
+#line 7
+category c886;
+#line 7
+category c887;
+#line 7
+category c888;
+#line 7
+category c889;
+#line 7
+category c890;
+#line 7
+category c891;
+#line 7
+category c892;
+#line 7
+category c893;
+#line 7
+category c894;
+#line 7
+category c895;
+#line 7
+category c896;
+#line 7
+category c897;
+#line 7
+category c898;
+#line 7
+category c899;
+#line 7
+category c900;
+#line 7
+category c901;
+#line 7
+category c902;
+#line 7
+category c903;
+#line 7
+category c904;
+#line 7
+category c905;
+#line 7
+category c906;
+#line 7
+category c907;
+#line 7
+category c908;
+#line 7
+category c909;
+#line 7
+category c910;
+#line 7
+category c911;
+#line 7
+category c912;
+#line 7
+category c913;
+#line 7
+category c914;
+#line 7
+category c915;
+#line 7
+category c916;
+#line 7
+category c917;
+#line 7
+category c918;
+#line 7
+category c919;
+#line 7
+category c920;
+#line 7
+category c921;
+#line 7
+category c922;
+#line 7
+category c923;
+#line 7
+category c924;
+#line 7
+category c925;
+#line 7
+category c926;
+#line 7
+category c927;
+#line 7
+category c928;
+#line 7
+category c929;
+#line 7
+category c930;
+#line 7
+category c931;
+#line 7
+category c932;
+#line 7
+category c933;
+#line 7
+category c934;
+#line 7
+category c935;
+#line 7
+category c936;
+#line 7
+category c937;
+#line 7
+category c938;
+#line 7
+category c939;
+#line 7
+category c940;
+#line 7
+category c941;
+#line 7
+category c942;
+#line 7
+category c943;
+#line 7
+category c944;
+#line 7
+category c945;
+#line 7
+category c946;
+#line 7
+category c947;
+#line 7
+category c948;
+#line 7
+category c949;
+#line 7
+category c950;
+#line 7
+category c951;
+#line 7
+category c952;
+#line 7
+category c953;
+#line 7
+category c954;
+#line 7
+category c955;
+#line 7
+category c956;
+#line 7
+category c957;
+#line 7
+category c958;
+#line 7
+category c959;
+#line 7
+category c960;
+#line 7
+category c961;
+#line 7
+category c962;
+#line 7
+category c963;
+#line 7
+category c964;
+#line 7
+category c965;
+#line 7
+category c966;
+#line 7
+category c967;
+#line 7
+category c968;
+#line 7
+category c969;
+#line 7
+category c970;
+#line 7
+category c971;
+#line 7
+category c972;
+#line 7
+category c973;
+#line 7
+category c974;
+#line 7
+category c975;
+#line 7
+category c976;
+#line 7
+category c977;
+#line 7
+category c978;
+#line 7
+category c979;
+#line 7
+category c980;
+#line 7
+category c981;
+#line 7
+category c982;
+#line 7
+category c983;
+#line 7
+category c984;
+#line 7
+category c985;
+#line 7
+category c986;
+#line 7
+category c987;
+#line 7
+category c988;
+#line 7
+category c989;
+#line 7
+category c990;
+#line 7
+category c991;
+#line 7
+category c992;
+#line 7
+category c993;
+#line 7
+category c994;
+#line 7
+category c995;
+#line 7
+category c996;
+#line 7
+category c997;
+#line 7
+category c998;
+#line 7
+category c999;
+#line 7
+category c1000;
+#line 7
+category c1001;
+#line 7
+category c1002;
+#line 7
+category c1003;
+#line 7
+category c1004;
+#line 7
+category c1005;
+#line 7
+category c1006;
+#line 7
+category c1007;
+#line 7
+category c1008;
+#line 7
+category c1009;
+#line 7
+category c1010;
+#line 7
+category c1011;
+#line 7
+category c1012;
+#line 7
+category c1013;
+#line 7
+category c1014;
+#line 7
+category c1015;
+#line 7
+category c1016;
+#line 7
+category c1017;
+#line 7
+category c1018;
+#line 7
+category c1019;
+#line 7
+category c1020;
+#line 7
+category c1021;
+#line 7
+category c1022;
+#line 7
+category c1023;
+#line 7
+
+
+# Generate level definitions for each sensitivity and category.
+level s0:c0.c1023;
+#line 10
+
+
+
+#################################################
+# MLS policy constraints
+#
+
+#
+# Process constraints
+#
+
+# Process transition:  Require equivalence unless the subject is trusted.
+mlsconstrain process { transition dyntransition }
+	     ((h1 eq h2 and l1 eq l2) or t1 == mlstrustedsubject);
+
+# Process read operations: No read up unless trusted.
+mlsconstrain process { getsched getsession getpgid getcap getattr ptrace share }
+	     (l1 dom l2 or t1 == mlstrustedsubject);
+
+# Process write operations:  No write down unless trusted.
+mlsconstrain process { sigkill sigstop signal setsched setpgid setcap setrlimit ptrace share }
+	     (l1 domby l2 or t1 == mlstrustedsubject);
+
+#
+# Socket constraints
+#
+
+# Create/relabel operations:  Subject must be equivalent to object unless
+# the subject is trusted.  Sockets inherit the range of their creator.
+mlsconstrain { socket tcp_socket udp_socket rawip_socket netlink_socket packet_socket key_socket unix_stream_socket unix_dgram_socket appletalk_socket netlink_route_socket netlink_firewall_socket netlink_tcpdiag_socket netlink_nflog_socket netlink_xfrm_socket netlink_selinux_socket netlink_audit_socket netlink_ip6fw_socket netlink_dnrt_socket netlink_kobject_uevent_socket tun_socket } { create relabelfrom relabelto }
+	     ((h1 eq h2 and l1 eq l2) or t1 == mlstrustedsubject);
+
+# Datagram send: Sender must be dominated by receiver unless one of them is
+# trusted.
+mlsconstrain unix_dgram_socket { sendto }
+	     (l1 domby l2 or t1 == mlstrustedsubject or t2 == mlstrustedsubject);
+
+# Stream connect:  Client must be equivalent to server unless one of them
+# is trusted.
+mlsconstrain unix_stream_socket { connectto }
+	     (l1 eq l2 or t1 == mlstrustedsubject or t2 == mlstrustedsubject);
+
+#
+# Directory/file constraints
+#
+
+# Create/relabel operations:  Subject must be equivalent to object unless
+# the subject is trusted. Also, files should always be single-level.
+# Do NOT exempt mlstrustedobject types from this constraint.
+mlsconstrain { dir { { chr_file blk_file } { file lnk_file sock_file fifo_file } } } { create relabelfrom relabelto }
+	     (l2 eq h2 and (l1 eq l2 or t1 == mlstrustedsubject));
+
+#
+# Constraints for app data files only.
+#
+
+# Only constrain open, not read/write.
+# Also constrain other forms of manipulation, e.g. chmod/chown, unlink, rename, etc.
+# Subject must be equivalent to object unless the subject is trusted.
+mlsconstrain dir { open search setattr rename add_name remove_name reparent rmdir }
+	     (t2 != app_data_file or l1 eq l2 or t1 == mlstrustedsubject);
+mlsconstrain { file lnk_file sock_file } { open setattr unlink link rename }
+	     (t2 != app_data_file or l1 eq l2 or t1 == mlstrustedsubject);
+
+#
+# Constraints for file types other than app data files.
+#
+
+# Read operations: Subject must dominate object unless the subject
+# or the object is trusted.
+mlsconstrain dir { read getattr search }
+	     (t2 == app_data_file or l1 dom l2 or t1 == mlstrustedsubject or t2 == mlstrustedobject);
+
+mlsconstrain { file lnk_file sock_file chr_file blk_file } { read getattr execute }
+	     (t2 == app_data_file or l1 dom l2 or t1 == mlstrustedsubject or t2 == mlstrustedobject);
+
+# Write operations: Subject must be dominated by the object unless the
+# subject or the object is trusted.
+mlsconstrain dir { write setattr rename add_name remove_name reparent rmdir }
+	     (t2 == app_data_file or l1 domby l2 or t1 == mlstrustedsubject or t2 == mlstrustedobject);
+
+mlsconstrain { file lnk_file sock_file chr_file blk_file } { write setattr append unlink link rename }
+	     (t2 == app_data_file or l1 domby l2 or t1 == mlstrustedsubject or t2 == mlstrustedobject);
+
+# Special case for FIFOs.
+# These can be unnamed pipes, in which case they will be labeled with the
+# creating process' label. Thus we also have an exemption when the "object"
+# is a MLS trusted subject and can receive data at any level.
+mlsconstrain fifo_file { read getattr }
+	     (l1 dom l2 or t1 == mlstrustedsubject or t2 == mlstrustedobject or t2 == mlstrustedsubject);
+
+mlsconstrain fifo_file { write setattr append unlink link rename }
+	     (l1 domby l2 or t1 == mlstrustedsubject or t2 == mlstrustedobject or t2 == mlstrustedsubject);
+
+#
+# IPC constraints
+#
+
+# Create/destroy: equivalence or trusted.
+mlsconstrain { sem msgq shm ipc } { create destroy }
+	     (l2 eq h2 and (l1 eq l2 or t1 == mlstrustedsubject));
+
+# Read ops: No read up unless trusted.
+mlsconstrain { sem msgq shm ipc } { getattr read associate unix_read }
+	     (l1 dom l2 or t1 == mlstrustedsubject);
+
+# Write ops: No write down unless trusted.
+mlsconstrain { sem msgq shm ipc } { write unix_write }
+	     (l1 domby l2 or t1 == mlstrustedsubject);
+
+#
+# Binder IPC constraints
+#
+# Presently commented out, as apps are expected to call one another.
+# This would only make sense if apps were assigned categories
+# based on allowable communications rather than per-app categories.
+#mlsconstrain binder call
+#	(l1 eq l2 or t1 == mlstrustedsubject or t2 == mlstrustedsubject);
+#line 1 "external/sepolicy/policy_capabilities"
+# Enable new networking controls.
+policycap network_peer_controls;
+
+# Enable open permission check.
+policycap open_perms;
+#line 1 "external/sepolicy/te_macros"
+#####################################
+# domain_trans(olddomain, type, newdomain)
+# Allow a transition from olddomain to newdomain
+# upon executing a file labeled with type.
+# This only allows the transition; it does not
+# cause it to occur automatically - use domain_auto_trans
+# if that is what you want.
+#
+#line 21
+
+
+#####################################
+# domain_auto_trans(olddomain, type, newdomain)
+# Automatically transition from olddomain to newdomain
+# upon executing a file labeled with type.
+#
+#line 33
+
+
+#####################################
+# file_type_trans(domain, dir_type, file_type)
+# Allow domain to create a file labeled file_type in a
+# directory labeled dir_type.
+# This only allows the transition; it does not
+# cause it to occur automatically - use file_type_auto_trans
+# if that is what you want.
+#
+#line 49
+
+
+#####################################
+# file_type_auto_trans(domain, dir_type, file_type)
+# Automatically label new files with file_type when
+# they are created by domain in directories labeled dir_type.
+#
+#line 62
+
+
+#####################################
+# r_dir_file(domain, type)
+# Allow the specified domain to read directories, files
+# and symbolic links of the specified type.
+#line 71
+
+
+#####################################
+# unconfined_domain(domain)
+# Allow the specified domain to do anything.
+#
+#line 80
+
+
+#####################################
+# tmpfs_domain(domain)
+# Define and allow access to a unique type for
+# this domain when creating tmpfs / shmem / ashmem files.
+#line 91
+
+
+#####################################
+# init_daemon_domain(domain)
+# Set up a transition from init to the daemon domain
+# upon executing its binary.
+#line 100
+
+
+#####################################
+# app_domain(domain)
+# Allow a base set of permissions required for all apps.
+#line 109
+
+
+#####################################
+# relabelto_domain(domain)
+# Allows this domain to use the relabelto permission
+#line 116
+
+
+#####################################
+# platform_app_domain(domain)
+# Allow permissions specific to platform apps.
+#line 124
+
+
+#####################################
+# net_domain(domain)
+# Allow a base set of permissions required for network access.
+#line 131
+
+
+#####################################
+# bluetooth_domain(domain)
+# Allow a base set of permissions required for bluetooth access.
+#line 138
+
+
+#####################################
+# unix_socket_connect(clientdomain, socket, serverdomain)
+# Allow a local socket connection from clientdomain via
+# socket to serverdomain.
+#line 147
+
+
+#####################################
+# unix_socket_send(clientdomain, socket, serverdomain)
+# Allow a local socket send from clientdomain via
+# socket to serverdomain.
+#line 156
+
+
+#####################################
+# binder_use(domain)
+# Allow domain to use Binder IPC.
+#line 168
+
+
+#####################################
+# binder_call(clientdomain, serverdomain)
+# Allow clientdomain to perform binder IPC to serverdomain.
+#line 180
+
+
+#####################################
+# binder_service(domain)
+# Mark a domain as being a Binder service domain.
+# Used to allow binder IPC to the various system services.
+#line 188
+
+
+#####################################
+# selinux_check_access(domain)
+# Allow domain to check SELinux permissions via selinuxfs.
+#line 198
+
+
+#####################################
+# selinux_check_context(domain)
+# Allow domain to check SELinux contexts via selinuxfs.
+#line 207
+
+
+#####################################
+# selinux_getenforce(domain)
+# Allow domain to check whether SELinux is enforcing.
+#line 215
+
+
+#####################################
+# selinux_setenforce(domain)
+# Allow domain to set SELinux to enforcing.
+#line 224
+
+
+#####################################
+# selinux_setbool(domain)
+# Allow domain to set SELinux booleans.
+#line 233
+
+
+#####################################
+# security_access_policy(domain)
+# Read only access to all policy files and
+# selinuxfs
+#line 247
+
+
+#####################################
+# selinux_manage_policy(domain)
+# Ability to manage policy files,
+# trigger runtime reload, change
+# enforcing mode, manipulate booleans
+# and access kernel logs.
+#line 263
+
+
+#####################################
+# mmac_manage_policy(domain)
+# Ability to manage mmac policy files,
+# trigger runtime reload, change
+# mmac enforcing mode and access logcat.
+#line 275
+
+
+#####################################
+# access_logcat(domain)
+# Ability to read from logcat logs
+# and execute the logcat command
+#line 284
+
+
+#####################################
+# access_kmsg(domain)
+# Ability to read from kernel logs
+# and execute the klogctl syscall
+# in a non destructive manner. See
+# man 2 klogctl
+#line 294
+
+
+#####################################
+# write_klog(domain)
+# Ability to write to kernel log via
+# klog_write()
+# See system/core/libcutil/klog.c
+#line 305
+
+
+#####################################
+# create_pty(domain)
+# Allow domain to create and use a pty, isolated from any other domain ptys.
+#line 319
+
+
+#####################################
+# Non system_app application set
+#
+
+#line 1 "external/sepolicy/attributes"
+######################################
+# Attribute declarations
+#
+
+# All types used for devices.
+attribute dev_type;
+
+# All types used for processes.
+attribute domain;
+
+# All types used for filesystems.
+attribute fs_type;
+
+# All types used for files that can exist on a labeled fs.
+# Do not use for pseudo file types.
+attribute file_type;
+
+# All types used for domain entry points.
+attribute exec_type;
+
+# All types used for /data files.
+attribute data_file_type;
+
+# All types use for sysfs files.
+attribute sysfs_type;
+
+# Attribute used for all sdcards
+attribute sdcard_type;
+
+# All types used for nodes/hosts.
+attribute node_type;
+
+# All types used for network interfaces.
+attribute netif_type;
+
+# All types used for network ports.
+attribute port_type;
+
+# All types used for property service
+attribute property_type;
+
+# All domains that can override MLS restrictions.
+# i.e. processes that can read up and write down.
+attribute mlstrustedsubject;
+
+# All types that can override MLS restrictions.
+# i.e. files that can be read by lower and written by higher
+attribute mlstrustedobject;
+
+# Domains that are allowed all permissions ("unconfined").
+attribute unconfineddomain;
+
+# All domains used for apps.
+attribute appdomain;
+
+# All domains used for apps with network access.
+attribute netdomain;
+
+# All domains used for apps with bluetooth access.
+attribute bluetoothdomain;
+
+# All domains used for binder service domains.
+attribute binderservicedomain;
+
+# Allow domains used for platform (signed by build key) apps.
+attribute platformappdomain;
+
+# All domains which are allowed the "relabelto" permission
+attribute relabeltodomain;
+#line 1 "external/sepolicy/vold.te"
+# volume manager
+type vold, domain;
+type vold_exec, exec_type, file_type;
+
+
+#line 5
+
+#line 5
+# Allow the necessary permissions.
+#line 5
+
+#line 5
+# Old domain may exec the file and transition to the new domain.
+#line 5
+allow init vold_exec:file { getattr open read execute };
+#line 5
+allow init vold:process transition;
+#line 5
+# New domain is entered by executing the file.
+#line 5
+allow vold vold_exec:file { entrypoint read execute };
+#line 5
+# New domain can send SIGCHLD to its caller.
+#line 5
+allow vold init:process sigchld;
+#line 5
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 5
+#line 5
+#line 5
+allow init vold:process { siginh rlimitinh };
+#line 5
+
+#line 5
+# Make the transition occur by default.
+#line 5
+type_transition init vold_exec:process vold;
+#line 5
+
+#line 5
+
+#line 5
+type vold_tmpfs, file_type;
+#line 5
+type_transition vold tmpfs:file vold_tmpfs;
+#line 5
+# Map with PROT_EXEC.
+#line 5
+allow vold vold_tmpfs:file { read execute execmod };
+#line 5
+
+#line 5
+
+
+typeattribute vold mlstrustedsubject;
+allow vold system_file:file { getattr execute execute_no_trans };
+allow vold block_device:dir { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } };
+allow vold block_device:blk_file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+allow vold device:dir write;
+allow vold devpts:chr_file { { getattr open read ioctl lock } { open append write } };
+allow vold rootfs:dir mounton;
+allow vold sdcard_type:dir mounton;
+allow vold sdcard_type:filesystem { mount remount unmount };
+allow vold sdcard_type:dir { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } };
+allow vold sdcard_type:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+allow vold tmpfs:filesystem { mount unmount };
+allow vold tmpfs:dir { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } };
+allow vold tmpfs:dir mounton;
+allow vold self:capability { net_admin dac_override mknod sys_admin chown fowner fsetid };
+allow vold self:netlink_kobject_uevent_socket *;
+allow vold app_data_file:dir search;
+allow vold app_data_file:file { { getattr open read ioctl lock } { open append write } };
+allow vold loop_device:blk_file { { getattr open read ioctl lock } { open append write } };
+allow vold dm_device:chr_file { { getattr open read ioctl lock } { open append write } };
+# For vold Process::killProcessesWithOpenFiles function.
+allow vold domain:dir { open getattr read search ioctl };
+allow vold domain:{ file lnk_file } { getattr open read ioctl lock };
+allow vold domain:process { signal sigkill };
+allow vold self:capability { sys_ptrace kill };
+
+# For blkid
+allow vold shell_exec:file { { getattr open read ioctl lock } { getattr execute execute_no_trans } };
+
+# XXX Label sysfs files with a specific type?
+allow vold sysfs:file { { getattr open read ioctl lock } { open append write } };
+
+
+#line 39
+type_transition vold device:chr_file klog_device "__kmsg__";
+#line 39
+allow vold klog_device:chr_file { create open write unlink };
+#line 39
+allow vold device:dir { add_name remove_name };
+#line 39
+
+
+#
+# Rules to support encrypted fs support.
+#
+
+# Set property.
+
+#line 46
+allow vold property_socket:sock_file write;
+#line 46
+allow vold init:unix_stream_socket connectto;
+#line 46
+
+
+# Unmount and mount the fs.
+allow vold labeledfs:filesystem { mount unmount remount };
+
+# Access /efs/userdata_footer.
+# XXX Split into a separate type?
+allow vold efs_file:file { { getattr open read ioctl lock } { open append write } };
+
+# Create and mount on /data/tmp_mnt.
+allow vold system_data_file:dir { create { { open getattr read search ioctl } { open search write add_name remove_name } } mounton };
+allow vold system_data_file:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+
+# Set scheduling policy of kernel processes
+allow vold kernel:process setsched;
+
+# Property Service
+allow vold vold_prop:property_service set;
+allow vold powerctl_prop:property_service set;
+allow vold ctl_default_prop:property_service set;
+
+# ASEC
+allow vold asec_image_file:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+allow vold asec_image_file:dir { { open getattr read search ioctl } { open search write add_name remove_name } };
+
+#line 70
+allow vold security_file:dir { open getattr read search ioctl };
+#line 70
+allow vold security_file:file { getattr open read ioctl lock };
+#line 70
+allow vold security_file:lnk_file read;
+#line 70
+allow vold selinuxfs:dir { open getattr read search ioctl };
+#line 70
+allow vold selinuxfs:file { getattr open read ioctl lock };
+#line 70
+allow vold rootfs:dir { open getattr read search ioctl };
+#line 70
+allow vold rootfs:file { getattr open read ioctl lock };
+#line 70
+
+
+#line 71
+typeattribute vold relabeltodomain;
+#line 71
+
+allow vold asec_apk_file:dir { { { open getattr read search ioctl } { open search write add_name remove_name } } setattr relabelfrom };
+allow vold asec_public_file:dir { relabelto setattr };
+allow vold asec_apk_file:file { { getattr open read ioctl lock } setattr relabelfrom };
+allow vold asec_public_file:file { relabelto setattr };
+allow vold sdcard_external:dir { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } };
+allow vold sdcard_external:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+
+# Vold can also run as minivold in the rootfs
+allow vold rootfs:file entrypoint;
+#line 1 "external/sepolicy/kernel.te"
+# Life begins with the kernel.
+type kernel, domain;
+permissive kernel;
+# The kernel is unconfined.
+
+#line 5
+typeattribute kernel mlstrustedsubject;
+#line 5
+typeattribute kernel unconfineddomain;
+#line 5
+
+
+#line 6
+typeattribute kernel relabeltodomain;
+#line 6
+
+
+allow kernel {fs_type dev_type file_type}:{ dir { { chr_file blk_file } { file lnk_file sock_file fifo_file } } } relabelto;
+#line 1 "external/sepolicy/platform_app.te"
+###
+### Apps signed with the platform key.
+###
+
+type platform_app, domain;
+permissive platform_app;
+
+#line 7
+typeattribute platform_app appdomain;
+#line 7
+# Label ashmem objects with our own unique type.
+#line 7
+
+#line 7
+type platform_app_tmpfs, file_type;
+#line 7
+type_transition platform_app tmpfs:file platform_app_tmpfs;
+#line 7
+# Map with PROT_EXEC.
+#line 7
+allow platform_app platform_app_tmpfs:file { read execute execmod };
+#line 7
+
+#line 7
+
+
+#line 8
+typeattribute platform_app platformappdomain;
+#line 8
+typeattribute platform_app mlstrustedsubject;
+#line 8
+
+# Access the network.
+
+#line 10
+typeattribute platform_app netdomain;
+#line 10
+
+# Access bluetooth.
+
+#line 12
+typeattribute platform_app bluetoothdomain;
+#line 12
+
+
+#line 13
+typeattribute platform_app mlstrustedsubject;
+#line 13
+typeattribute platform_app unconfineddomain;
+#line 13
+
+#line 1 "external/sepolicy/nfc.te"
+# nfc subsystem
+type nfc, domain;
+permissive nfc;
+
+#line 4
+typeattribute nfc appdomain;
+#line 4
+# Label ashmem objects with our own unique type.
+#line 4
+
+#line 4
+type nfc_tmpfs, file_type;
+#line 4
+type_transition nfc tmpfs:file nfc_tmpfs;
+#line 4
+# Map with PROT_EXEC.
+#line 4
+allow nfc nfc_tmpfs:file { read execute execmod };
+#line 4
+
+#line 4
+
+
+#line 5
+typeattribute nfc mlstrustedsubject;
+#line 5
+typeattribute nfc unconfineddomain;
+#line 5
+
+#line 1 "external/sepolicy/rild.te"
+# rild - radio interface layer daemon
+type rild, domain;
+permissive rild;
+type rild_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init rild_exec:file { getattr open read execute };
+#line 6
+allow init rild:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow rild rild_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow rild init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init rild:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init rild_exec:process rild;
+#line 6
+
+#line 6
+
+#line 6
+type rild_tmpfs, file_type;
+#line 6
+type_transition rild tmpfs:file rild_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow rild rild_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute rild netdomain;
+#line 7
+
+
+#line 8
+typeattribute rild mlstrustedsubject;
+#line 8
+typeattribute rild unconfineddomain;
+#line 8
+
+
+# Access to wake locks
+allow rild sysfs_wake_lock:file { { getattr open read ioctl lock } { open append write } };
+#line 1 "external/sepolicy/dbusd.te"
+# dbus daemon
+type dbusd, domain;
+permissive dbusd;
+type dbusd_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init dbusd_exec:file { getattr open read execute };
+#line 6
+allow init dbusd:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow dbusd dbusd_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow dbusd init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init dbusd:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init dbusd_exec:process dbusd;
+#line 6
+
+#line 6
+
+#line 6
+type dbusd_tmpfs, file_type;
+#line 6
+type_transition dbusd tmpfs:file dbusd_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow dbusd dbusd_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute dbusd mlstrustedsubject;
+#line 7
+typeattribute dbusd unconfineddomain;
+#line 7
+
+#line 1 "external/sepolicy/untrusted_app.te"
+###
+### Untrusted apps.
+###
+### This file defines the rules for untrusted apps. An "untrusted
+### app" is an APP with UID between APP_AID (10000)
+### and AID_ISOLATED_START (99000).
+###
+### untrusted_app includes all the appdomain rules, plus the
+### additional following rules:
+###
+
+type untrusted_app, domain;
+permissive untrusted_app;
+
+#line 14
+typeattribute untrusted_app appdomain;
+#line 14
+# Label ashmem objects with our own unique type.
+#line 14
+
+#line 14
+type untrusted_app_tmpfs, file_type;
+#line 14
+type_transition untrusted_app tmpfs:file untrusted_app_tmpfs;
+#line 14
+# Map with PROT_EXEC.
+#line 14
+allow untrusted_app untrusted_app_tmpfs:file { read execute execmod };
+#line 14
+
+#line 14
+
+
+#line 15
+typeattribute untrusted_app netdomain;
+#line 15
+
+
+#line 16
+typeattribute untrusted_app bluetoothdomain;
+#line 16
+
+
+# Some apps ship with shared libraries and binaries that they write out
+# to their sandbox directory and then execute.
+allow untrusted_app app_data_file:file { { getattr open read ioctl lock } { getattr execute execute_no_trans } };
+
+allow untrusted_app tun_device:chr_file { { getattr open read ioctl lock } { open append write } };
+
+# Internal SDCard rw access.
+allow untrusted_app sdcard_internal:dir { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } };
+allow untrusted_app sdcard_internal:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+
+# External SDCard rw access.
+allow untrusted_app sdcard_external:dir { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } };
+allow untrusted_app sdcard_external:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+
+# ASEC
+allow untrusted_app asec_apk_file:dir { getattr };
+allow untrusted_app asec_apk_file:file { getattr open read ioctl lock };
+# Execute libs in asec containers.
+allow untrusted_app asec_public_file:file execute;
+
+# Create tcp/udp sockets
+allow untrusted_app node_type:{ tcp_socket udp_socket } node_bind;
+allow untrusted_app self:{ tcp_socket udp_socket } { { create { ioctl read getattr write setattr append bind connect getopt setopt shutdown } } accept listen };
+# Bind to a particular hostname/address/interface (e.g., localhost) instead of
+# ANY. Normally, apps should not be listening on all interfaces.
+allow untrusted_app port:{ tcp_socket udp_socket } name_bind;
+
+# Allow the allocation and use of ptys
+# Used by: https://play.google.com/store/apps/details?id=jackpal.androidterm
+
+#line 47
+# Each domain gets a unique devpts type.
+#line 47
+type untrusted_app_devpts, fs_type;
+#line 47
+# Label the pty with the unique type when created.
+#line 47
+type_transition untrusted_app devpts:chr_file untrusted_app_devpts;
+#line 47
+# Allow use of the pty after creation.
+#line 47
+allow untrusted_app untrusted_app_devpts:chr_file { open getattr read write ioctl };
+#line 47
+# Note: devpts:dir search and ptmx_device:chr_file rw_file_perms
+#line 47
+# allowed to everyone via domain.te.
+#line 47
+
+
+# Used by Finsky / Android "Verify Apps" functionality when
+# running "adb install foo.apk".
+# TODO: Long term, we don't want apps probing into shell data files.
+# Figure out a way to remove these rules.
+# XXX Adding writing to shell_data_file to fix 10290009; this needs a real fix,
+# as allowing apps to write shell data files is a significant possible security
+# vuln
+allow untrusted_app shell_data_file:file { { getattr open read ioctl lock } { open append write } };
+allow untrusted_app shell_data_file:dir { open getattr read search ioctl };
+#line 1 "external/sepolicy/runas.te"
+type runas, domain;
+type runas_exec, exec_type, file_type;
+permissive runas;
+
+#line 4
+typeattribute runas mlstrustedsubject;
+#line 4
+typeattribute runas unconfineddomain;
+#line 4
+
+
+# ndk-gdb invokes adb shell run-as.
+
+#line 7
+# Allow the necessary permissions.
+#line 7
+
+#line 7
+# Old domain may exec the file and transition to the new domain.
+#line 7
+allow shell runas_exec:file { getattr open read execute };
+#line 7
+allow shell runas:process transition;
+#line 7
+# New domain is entered by executing the file.
+#line 7
+allow runas runas_exec:file { entrypoint read execute };
+#line 7
+# New domain can send SIGCHLD to its caller.
+#line 7
+allow runas shell:process sigchld;
+#line 7
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 7
+#line 7
+#line 7
+allow shell runas:process { siginh rlimitinh };
+#line 7
+
+#line 7
+# Make the transition occur by default.
+#line 7
+type_transition shell runas_exec:process runas;
+#line 7
+
+#line 1 "external/sepolicy/dhcp.te"
+type dhcp, domain;
+permissive dhcp;
+type dhcp_exec, exec_type, file_type;
+type dhcp_data_file, file_type, data_file_type;
+type dhcp_system_file, file_type, data_file_type;
+
+
+#line 7
+
+#line 7
+# Allow the necessary permissions.
+#line 7
+
+#line 7
+# Old domain may exec the file and transition to the new domain.
+#line 7
+allow init dhcp_exec:file { getattr open read execute };
+#line 7
+allow init dhcp:process transition;
+#line 7
+# New domain is entered by executing the file.
+#line 7
+allow dhcp dhcp_exec:file { entrypoint read execute };
+#line 7
+# New domain can send SIGCHLD to its caller.
+#line 7
+allow dhcp init:process sigchld;
+#line 7
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 7
+#line 7
+#line 7
+allow init dhcp:process { siginh rlimitinh };
+#line 7
+
+#line 7
+# Make the transition occur by default.
+#line 7
+type_transition init dhcp_exec:process dhcp;
+#line 7
+
+#line 7
+
+#line 7
+type dhcp_tmpfs, file_type;
+#line 7
+type_transition dhcp tmpfs:file dhcp_tmpfs;
+#line 7
+# Map with PROT_EXEC.
+#line 7
+allow dhcp dhcp_tmpfs:file { read execute execmod };
+#line 7
+
+#line 7
+
+
+#line 8
+typeattribute dhcp netdomain;
+#line 8
+
+
+#line 9
+typeattribute dhcp mlstrustedsubject;
+#line 9
+typeattribute dhcp unconfineddomain;
+#line 9
+
+
+type_transition dhcp system_data_file:{ dir file } dhcp_data_file;
+#line 1 "external/sepolicy/unconfined.te"
+allow unconfineddomain self:{ capability capability2 } *;
+allow unconfineddomain kernel:security ~load_policy;
+allow unconfineddomain kernel:system *;
+allow unconfineddomain self:memprotect *;
+allow unconfineddomain domain:process *;
+allow unconfineddomain domain:fd *;
+allow unconfineddomain domain:dir { open getattr read search ioctl };
+allow unconfineddomain domain:lnk_file { getattr open read ioctl lock };
+allow unconfineddomain domain:{ fifo_file file } { { getattr open read ioctl lock } { open append write } };
+allow unconfineddomain domain:{ socket tcp_socket udp_socket rawip_socket netlink_socket packet_socket key_socket unix_stream_socket unix_dgram_socket appletalk_socket netlink_route_socket netlink_firewall_socket netlink_tcpdiag_socket netlink_nflog_socket netlink_xfrm_socket netlink_selinux_socket netlink_audit_socket netlink_ip6fw_socket netlink_dnrt_socket netlink_kobject_uevent_socket tun_socket } *;
+allow unconfineddomain domain:{ sem msgq shm ipc } *;
+allow unconfineddomain domain:key *;
+allow unconfineddomain fs_type:filesystem *;
+allow unconfineddomain {fs_type dev_type file_type}:{ dir blk_file lnk_file sock_file fifo_file } ~relabelto;
+allow unconfineddomain {fs_type dev_type file_type}:{ chr_file file } ~{entrypoint relabelto};
+allow unconfineddomain node_type:node *;
+allow unconfineddomain node_type:{ tcp_socket udp_socket rawip_socket } node_bind;
+allow unconfineddomain netif_type:netif *;
+allow unconfineddomain port_type:{ socket tcp_socket udp_socket rawip_socket netlink_socket packet_socket key_socket unix_stream_socket unix_dgram_socket appletalk_socket netlink_route_socket netlink_firewall_socket netlink_tcpdiag_socket netlink_nflog_socket netlink_xfrm_socket netlink_selinux_socket netlink_audit_socket netlink_ip6fw_socket netlink_dnrt_socket netlink_kobject_uevent_socket tun_socket } name_bind;
+allow unconfineddomain port_type:{ tcp_socket dccp_socket } name_connect;
+allow unconfineddomain domain:peer recv;
+allow unconfineddomain domain:binder { call transfer set_context_mgr };
+allow unconfineddomain property_type:property_service set;
+#line 1 "external/sepolicy/tee.te"
+##
+# trusted execution environment (tee) daemon
+#
+type tee, domain;
+type tee_exec, exec_type, file_type;
+type tee_device, dev_type;
+type tee_data_file, file_type, data_file_type;
+
+permissive tee;
+
+#line 10
+typeattribute tee mlstrustedsubject;
+#line 10
+typeattribute tee unconfineddomain;
+#line 10
+
+
+#line 11
+
+#line 11
+# Allow the necessary permissions.
+#line 11
+
+#line 11
+# Old domain may exec the file and transition to the new domain.
+#line 11
+allow init tee_exec:file { getattr open read execute };
+#line 11
+allow init tee:process transition;
+#line 11
+# New domain is entered by executing the file.
+#line 11
+allow tee tee_exec:file { entrypoint read execute };
+#line 11
+# New domain can send SIGCHLD to its caller.
+#line 11
+allow tee init:process sigchld;
+#line 11
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 11
+#line 11
+#line 11
+allow init tee:process { siginh rlimitinh };
+#line 11
+
+#line 11
+# Make the transition occur by default.
+#line 11
+type_transition init tee_exec:process tee;
+#line 11
+
+#line 11
+
+#line 11
+type tee_tmpfs, file_type;
+#line 11
+type_transition tee tmpfs:file tee_tmpfs;
+#line 11
+# Map with PROT_EXEC.
+#line 11
+allow tee tee_tmpfs:file { read execute execmod };
+#line 11
+
+#line 11
+
+#line 1 "external/sepolicy/surfaceflinger.te"
+# surfaceflinger - display compositor service
+type surfaceflinger, domain;
+permissive surfaceflinger;
+type surfaceflinger_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init surfaceflinger_exec:file { getattr open read execute };
+#line 6
+allow init surfaceflinger:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow surfaceflinger surfaceflinger_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow surfaceflinger init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init surfaceflinger:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init surfaceflinger_exec:process surfaceflinger;
+#line 6
+
+#line 6
+
+#line 6
+type surfaceflinger_tmpfs, file_type;
+#line 6
+type_transition surfaceflinger tmpfs:file surfaceflinger_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow surfaceflinger surfaceflinger_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute surfaceflinger mlstrustedsubject;
+#line 7
+typeattribute surfaceflinger unconfineddomain;
+#line 7
+
+
+# Talk to init over the property socket.
+
+#line 10
+allow surfaceflinger property_socket:sock_file write;
+#line 10
+allow surfaceflinger init:unix_stream_socket connectto;
+#line 10
+
+#line 1 "external/sepolicy/bluetooth.te"
+# bluetooth subsystem
+type bluetooth, domain;
+permissive bluetooth;
+
+#line 4
+typeattribute bluetooth appdomain;
+#line 4
+# Label ashmem objects with our own unique type.
+#line 4
+
+#line 4
+type bluetooth_tmpfs, file_type;
+#line 4
+type_transition bluetooth tmpfs:file bluetooth_tmpfs;
+#line 4
+# Map with PROT_EXEC.
+#line 4
+allow bluetooth bluetooth_tmpfs:file { read execute execmod };
+#line 4
+
+#line 4
+
+
+#line 5
+typeattribute bluetooth mlstrustedsubject;
+#line 5
+typeattribute bluetooth unconfineddomain;
+#line 5
+
+#line 1 "external/sepolicy/gpsd.te"
+# gpsd - GPS daemon
+type gpsd, domain;
+permissive gpsd;
+type gpsd_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init gpsd_exec:file { getattr open read execute };
+#line 6
+allow init gpsd:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow gpsd gpsd_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow gpsd init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init gpsd:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init gpsd_exec:process gpsd;
+#line 6
+
+#line 6
+
+#line 6
+type gpsd_tmpfs, file_type;
+#line 6
+type_transition gpsd tmpfs:file gpsd_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow gpsd gpsd_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute gpsd netdomain;
+#line 7
+
+
+#line 8
+typeattribute gpsd mlstrustedsubject;
+#line 8
+typeattribute gpsd unconfineddomain;
+#line 8
+
+# Socket is created by the daemon, not by init, and under /data/gps,
+# not under /dev/socket.
+type_transition gpsd gps_data_file:sock_file gps_socket;
+
+#line 1 "external/sepolicy/app.te"
+###
+### Domain for all zygote spawned apps
+###
+### This file is the base policy for all zygote spawned apps.
+### Other policy files, such as isolated_app.te, untrusted_app.te, etc
+### extend from this policy. Only policies which should apply to ALL
+### zygote spawned apps should be added here.
+###
+
+# Allow apps to connect to the keystore
+
+#line 11
+allow appdomain keystore_socket:sock_file write;
+#line 11
+allow appdomain keystore:unix_stream_socket connectto;
+#line 11
+
+
+# Receive and use open file descriptors inherited from zygote.
+allow appdomain zygote:fd use;
+
+# gdbserver for ndk-gdb reads the zygote.
+# valgrind needs mmap exec for zygote
+allow appdomain zygote_exec:file { { getattr open read ioctl lock } { getattr execute execute_no_trans } };
+
+# gdbserver for ndk-gdb ptrace attaches to app process.
+allow appdomain self:process ptrace;
+
+# Read system properties managed by zygote.
+allow appdomain zygote_tmpfs:file read;
+
+# Notify zygote of death;
+allow appdomain zygote:process sigchld;
+
+# Communicate with system_server.
+allow appdomain system:fifo_file { { getattr open read ioctl lock } { open append write } };
+allow appdomain system:unix_stream_socket { read write setopt };
+
+#line 32
+# Call the server domain and optionally transfer references to it.
+#line 32
+allow appdomain system:binder { call transfer };
+#line 32
+# Allow the serverdomain to transfer references to the client on the reply.
+#line 32
+allow system appdomain:binder transfer;
+#line 32
+# Receive and use open files from the server.
+#line 32
+allow appdomain system:fd use;
+#line 32
+
+
+# Communicate with surfaceflinger.
+allow appdomain surfaceflinger:unix_stream_socket { read write setopt };
+
+#line 36
+# Call the server domain and optionally transfer references to it.
+#line 36
+allow appdomain surfaceflinger:binder { call transfer };
+#line 36
+# Allow the serverdomain to transfer references to the client on the reply.
+#line 36
+allow surfaceflinger appdomain:binder transfer;
+#line 36
+# Receive and use open files from the server.
+#line 36
+allow appdomain surfaceflinger:fd use;
+#line 36
+
+
+# App sandbox file accesses.
+allow appdomain app_data_file:dir { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } };
+allow appdomain app_data_file:{ file lnk_file sock_file fifo_file } { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+
+# lib subdirectory of /data/data dir is system-owned.
+allow appdomain system_data_file:dir { open getattr read search ioctl };
+allow appdomain system_data_file:file { execute open };
+
+# Execute the shell or other system executables.
+allow appdomain shell_exec:file { { getattr open read ioctl lock } { getattr execute execute_no_trans } };
+allow appdomain system_file:file { { getattr open read ioctl lock } { getattr execute execute_no_trans } };
+
+# Read/write wallpaper file (opened by system).
+allow appdomain wallpaper_file:file { read write };
+
+# Write to /data/anr/traces.txt.
+allow appdomain anr_data_file:dir search;
+allow appdomain anr_data_file:file { open append };
+
+# Write to /proc/net/xt_qtaguid/ctrl file.
+allow appdomain qtaguid_proc:file { { getattr open read ioctl lock } { open append write } };
+# Everybody can read the xt_qtaguid resource tracking misc dev.
+# So allow all apps to read from /dev/xt_qtaguid.
+allow appdomain qtaguid_device:chr_file { getattr open read ioctl lock };
+
+# Use the Binder.
+
+#line 64
+# Call the servicemanager and transfer references to it.
+#line 64
+allow appdomain servicemanager:binder { call transfer };
+#line 64
+# Map /dev/ashmem with PROT_EXEC.
+#line 64
+allow appdomain ashmem_device:chr_file execute;
+#line 64
+# rw access to /dev/binder and /dev/ashmem is presently granted to
+#line 64
+# all domains in domain.te.
+#line 64
+
+# Perform binder IPC to binder services.
+
+#line 66
+# Call the server domain and optionally transfer references to it.
+#line 66
+allow appdomain binderservicedomain:binder { call transfer };
+#line 66
+# Allow the serverdomain to transfer references to the client on the reply.
+#line 66
+allow binderservicedomain appdomain:binder transfer;
+#line 66
+# Receive and use open files from the server.
+#line 66
+allow appdomain binderservicedomain:fd use;
+#line 66
+
+# Perform binder IPC to other apps.
+
+#line 68
+# Call the server domain and optionally transfer references to it.
+#line 68
+allow appdomain appdomain:binder { call transfer };
+#line 68
+# Allow the serverdomain to transfer references to the client on the reply.
+#line 68
+allow appdomain appdomain:binder transfer;
+#line 68
+# Receive and use open files from the server.
+#line 68
+allow appdomain appdomain:fd use;
+#line 68
+
+
+# Appdomain interaction with isolated apps
+
+#line 71
+allow appdomain isolated_app:dir { open getattr read search ioctl };
+#line 71
+allow appdomain isolated_app:{ file lnk_file } { getattr open read ioctl lock };
+#line 71
+
+
+#line 72
+# Call the server domain and optionally transfer references to it.
+#line 72
+allow appdomain isolated_app:binder { call transfer };
+#line 72
+# Allow the serverdomain to transfer references to the client on the reply.
+#line 72
+allow isolated_app appdomain:binder transfer;
+#line 72
+# Receive and use open files from the server.
+#line 72
+allow appdomain isolated_app:fd use;
+#line 72
+
+
+# Already connected, unnamed sockets being passed over some other IPC
+# hence no sock_file or connectto permission. This appears to be how
+# Chrome works, may need to be updated as more apps using isolated services
+# are examined.
+allow appdomain isolated_app:unix_stream_socket { read write };
+
+# Backup ability for every app. BMS opens and passes the fd
+# to any app that has backup ability. Hence, no open permissions here.
+allow appdomain backup_data_file:file { read write getattr };
+allow appdomain cache_backup_file:file { read write getattr };
+# Backup ability using 'adb backup'
+allow appdomain system_data_file:lnk_file getattr;
+
+# Allow applications to communicate with netd via /dev/socket/dnsproxyd
+# to do DNS resolution
+
+#line 89
+allow appdomain dnsproxyd_socket:sock_file write;
+#line 89
+allow appdomain netd:unix_stream_socket connectto;
+#line 89
+
+
+# Allow applications to communicate with drmserver over binder
+
+#line 92
+# Call the server domain and optionally transfer references to it.
+#line 92
+allow appdomain drmserver:binder { call transfer };
+#line 92
+# Allow the serverdomain to transfer references to the client on the reply.
+#line 92
+allow drmserver appdomain:binder transfer;
+#line 92
+# Receive and use open files from the server.
+#line 92
+allow appdomain drmserver:fd use;
+#line 92
+
+
+# Allow applications to communicate with mediaserver over binder
+
+#line 95
+# Call the server domain and optionally transfer references to it.
+#line 95
+allow appdomain mediaserver:binder { call transfer };
+#line 95
+# Allow the serverdomain to transfer references to the client on the reply.
+#line 95
+allow mediaserver appdomain:binder transfer;
+#line 95
+# Receive and use open files from the server.
+#line 95
+allow appdomain mediaserver:fd use;
+#line 95
+
+
+# Allow applications to make outbound tcp connections to any port
+allow appdomain port_type:tcp_socket name_connect;
+
+# Allow apps to see changes to the routing table.
+allow appdomain self:netlink_route_socket {
+    read
+    bind
+    create
+    nlmsg_read
+    ioctl
+    getattr
+    setattr
+    getopt
+    setopt
+    shutdown
+};
+
+# Allow apps to use rawip sockets. This is needed for apps which execute
+# /system/bin/ping, for example.
+allow appdomain self:rawip_socket { create { ioctl read getattr write setattr append bind connect getopt setopt shutdown } };
+
+###
+### CTS-specific rules
+###
+
+# For cts/tools/device-setup/TestDeviceSetup/src/android/tests/getinfo/RootProcessScanner.java.
+# Reads /proc/pid/status and statm entries to check that
+# no unexpected root processes are running.
+# Also for cts/tests/tests/security/src/android/security/cts/VoldExploitTest.java
+# Reads /proc/pid/cmdline of vold.
+allow appdomain domain:dir { open read search getattr };
+allow appdomain domain:{ file lnk_file } { open read getattr };
+
+# For cts/tests/tests/permission/src/android/permission/cts/FileSystemPermissionTest.java.
+# testRunAsHasCorrectCapabilities
+allow appdomain runas_exec:file getattr;
+# Others are either allowed elsewhere or not desired.
+
+# For cts/tests/tests/security/src/android/security/cts/SELinuxTest.java
+# Check SELinux policy and contexts.
+
+#line 137
+allow appdomain selinuxfs:dir { open getattr read search ioctl };
+#line 137
+allow appdomain selinuxfs:file { { getattr open read ioctl lock } { open append write } };
+#line 137
+allow appdomain kernel:security compute_av;
+#line 137
+allow appdomain self:netlink_selinux_socket *;
+#line 137
+
+
+#line 138
+allow appdomain selinuxfs:dir { open getattr read search ioctl };
+#line 138
+allow appdomain selinuxfs:file { { getattr open read ioctl lock } { open append write } };
+#line 138
+allow appdomain kernel:security check_context;
+#line 138
+
+# Validate that each process is running in the correct security context.
+allow appdomain domain:process getattr;
+
+###
+### Neverallow rules
+###
+### These are things that Android apps should NEVER be able to do
+###
+
+# Superuser capabilities.
+# Only exception is sys_nice for binder, might not be necessary.
+neverallow { appdomain -unconfineddomain } self:capability ~sys_nice;
+neverallow { appdomain -unconfineddomain } self:capability2 *;
+
+# Block device access.
+neverallow { appdomain -unconfineddomain } dev_type:blk_file { read write };
+
+# Kernel memory access.
+neverallow { appdomain -unconfineddomain } kmem_device:chr_file { read write };
+
+# Setting SELinux enforcing status or booleans.
+# Conditionally allowed to system_app for SEAndroidManager.
+neverallow { appdomain -unconfineddomain } kernel:security { setenforce setbool };
+
+# Load security policy.
+neverallow appdomain kernel:security load_policy;
+
+# Privileged netlink socket interfaces.
+neverallow { appdomain -unconfineddomain }
+    self:{
+        netlink_socket
+        netlink_firewall_socket
+        netlink_tcpdiag_socket
+        netlink_nflog_socket
+        netlink_xfrm_socket
+        netlink_audit_socket
+        netlink_ip6fw_socket
+        netlink_dnrt_socket
+        netlink_kobject_uevent_socket
+    } *;
+
+# ptrace access to non-app domains.
+neverallow { appdomain -unconfineddomain } { domain -appdomain }:process ptrace;
+
+# Transition to a non-app domain.
+neverallow { appdomain -unconfineddomain } ~appdomain:process { transition dyntransition };
+
+# Write to /system.
+neverallow { appdomain -unconfineddomain } system_file:{ dir { { chr_file blk_file } { file lnk_file sock_file fifo_file } } } write;
+
+# Write to system-owned parts of /data.
+# This is the default type for anything under /data not otherwise
+# specified in file_contexts.  Define a different type for portions
+# that should be writable by apps.
+# Exception for system_app for Settings.
+neverallow { appdomain -unconfineddomain -system_app } system_data_file:{ dir { { chr_file blk_file } { file lnk_file sock_file fifo_file } } } write;
+#line 1 "external/sepolicy/mediaserver.te"
+# mediaserver - multimedia daemon
+type mediaserver, domain;
+permissive mediaserver;
+type mediaserver_exec, exec_type, file_type;
+
+
+#line 6
+typeattribute mediaserver netdomain;
+#line 6
+
+
+#line 7
+
+#line 7
+# Allow the necessary permissions.
+#line 7
+
+#line 7
+# Old domain may exec the file and transition to the new domain.
+#line 7
+allow init mediaserver_exec:file { getattr open read execute };
+#line 7
+allow init mediaserver:process transition;
+#line 7
+# New domain is entered by executing the file.
+#line 7
+allow mediaserver mediaserver_exec:file { entrypoint read execute };
+#line 7
+# New domain can send SIGCHLD to its caller.
+#line 7
+allow mediaserver init:process sigchld;
+#line 7
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 7
+#line 7
+#line 7
+allow init mediaserver:process { siginh rlimitinh };
+#line 7
+
+#line 7
+# Make the transition occur by default.
+#line 7
+type_transition init mediaserver_exec:process mediaserver;
+#line 7
+
+#line 7
+
+#line 7
+type mediaserver_tmpfs, file_type;
+#line 7
+type_transition mediaserver tmpfs:file mediaserver_tmpfs;
+#line 7
+# Map with PROT_EXEC.
+#line 7
+allow mediaserver mediaserver_tmpfs:file { read execute execmod };
+#line 7
+
+#line 7
+
+
+#line 8
+typeattribute mediaserver mlstrustedsubject;
+#line 8
+typeattribute mediaserver unconfineddomain;
+#line 8
+
+#line 1 "external/sepolicy/qemud.te"
+# qemu support daemon
+type qemud, domain;
+permissive qemud;
+type qemud_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init qemud_exec:file { getattr open read execute };
+#line 6
+allow init qemud:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow qemud qemud_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow qemud init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init qemud:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init qemud_exec:process qemud;
+#line 6
+
+#line 6
+
+#line 6
+type qemud_tmpfs, file_type;
+#line 6
+type_transition qemud tmpfs:file qemud_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow qemud qemud_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute qemud mlstrustedsubject;
+#line 7
+typeattribute qemud unconfineddomain;
+#line 1 "external/sepolicy/isolated_app.te"
+###
+### Services with isolatedProcess=true in their manifest.
+###
+### This file defines the rules for isolated apps. An "isolated
+### app" is an APP with UID between AID_ISOLATED_START (99000)
+### and AID_ISOLATED_END (99999).
+###
+### isolated_app includes all the appdomain rules, plus the
+### additional following rules:
+###
+
+type isolated_app, domain;
+permissive isolated_app;
+
+#line 14
+typeattribute isolated_app appdomain;
+#line 14
+# Label ashmem objects with our own unique type.
+#line 14
+
+#line 14
+type isolated_app_tmpfs, file_type;
+#line 14
+type_transition isolated_app tmpfs:file isolated_app_tmpfs;
+#line 14
+# Map with PROT_EXEC.
+#line 14
+allow isolated_app isolated_app_tmpfs:file { read execute execmod };
+#line 14
+
+#line 14
+
+
+# Appdomain interaction with isolated apps
+
+#line 17
+allow appdomain isolated_app:dir { open getattr read search ioctl };
+#line 17
+allow appdomain isolated_app:{ file lnk_file } { getattr open read ioctl lock };
+#line 17
+
+
+# Already connected, unnamed sockets being passed over some other IPC
+# hence no sock_file or connectto permission. This appears to be how
+# Chrome works, may need to be updated as more apps using isolated services
+# are examined.
+allow isolated_app appdomain:unix_stream_socket { read write };
+#line 1 "external/sepolicy/init_shell.te"
+# Restricted domain for shell processes spawned by init
+type init_shell, domain;
+permissive init_shell;
+
+#line 4
+# Allow the necessary permissions.
+#line 4
+
+#line 4
+# Old domain may exec the file and transition to the new domain.
+#line 4
+allow init shell_exec:file { getattr open read execute };
+#line 4
+allow init init_shell:process transition;
+#line 4
+# New domain is entered by executing the file.
+#line 4
+allow init_shell shell_exec:file { entrypoint read execute };
+#line 4
+# New domain can send SIGCHLD to its caller.
+#line 4
+allow init_shell init:process sigchld;
+#line 4
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 4
+#line 4
+#line 4
+allow init init_shell:process { siginh rlimitinh };
+#line 4
+
+#line 4
+# Make the transition occur by default.
+#line 4
+type_transition init shell_exec:process init_shell;
+#line 4
+
+
+#line 5
+typeattribute init_shell mlstrustedsubject;
+#line 5
+typeattribute init_shell unconfineddomain;
+#line 5
+
+#line 1 "external/sepolicy/ueventd.te"
+# ueventd seclabel is specified in init.rc since
+# it lives in the rootfs and has no unique file type.
+type ueventd, domain;
+permissive ueventd;
+
+#line 5
+type ueventd_tmpfs, file_type;
+#line 5
+type_transition ueventd tmpfs:file ueventd_tmpfs;
+#line 5
+# Map with PROT_EXEC.
+#line 5
+allow ueventd ueventd_tmpfs:file { read execute execmod };
+#line 5
+
+
+#line 6
+type_transition ueventd device:chr_file klog_device "__kmsg__";
+#line 6
+allow ueventd klog_device:chr_file { create open write unlink };
+#line 6
+allow ueventd device:dir { add_name remove_name };
+#line 6
+
+
+#line 7
+allow ueventd security_file:dir { open getattr read search ioctl };
+#line 7
+allow ueventd security_file:file { getattr open read ioctl lock };
+#line 7
+allow ueventd security_file:lnk_file read;
+#line 7
+allow ueventd selinuxfs:dir { open getattr read search ioctl };
+#line 7
+allow ueventd selinuxfs:file { getattr open read ioctl lock };
+#line 7
+allow ueventd rootfs:dir { open getattr read search ioctl };
+#line 7
+allow ueventd rootfs:file { getattr open read ioctl lock };
+#line 7
+
+
+#line 8
+typeattribute ueventd relabeltodomain;
+#line 8
+
+allow ueventd rootfs:file entrypoint;
+allow ueventd init:process sigchld;
+allow ueventd self:capability { chown mknod net_admin setgid fsetid sys_rawio dac_override fowner };
+allow ueventd device:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+allow ueventd device:chr_file { { getattr open read ioctl lock } { open append write } };
+allow ueventd sysfs:file { { getattr open read ioctl lock } { open append write } };
+allow ueventd sysfs:file setattr;
+allow ueventd sysfs_type:file { relabelfrom relabelto };
+allow ueventd sysfs_devices_system_cpu:file { { getattr open read ioctl lock } { open append write } };
+allow ueventd tmpfs:chr_file { { getattr open read ioctl lock } { open append write } };
+allow ueventd dev_type:dir { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } };
+allow ueventd dev_type:lnk_file { create unlink };
+allow ueventd dev_type:chr_file { create setattr unlink };
+allow ueventd dev_type:blk_file { create setattr unlink };
+allow ueventd self:netlink_kobject_uevent_socket { create { ioctl read getattr write setattr append bind connect getopt setopt shutdown } };
+allow ueventd efs_file:dir search;
+allow ueventd efs_file:file { getattr open read ioctl lock };
+#line 1 "external/sepolicy/wpa_supplicant.te"
+# wpa - wpa supplicant or equivalent
+type wpa, domain;
+permissive wpa;
+type wpa_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init wpa_exec:file { getattr open read execute };
+#line 6
+allow init wpa:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow wpa wpa_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow wpa init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init wpa:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init wpa_exec:process wpa;
+#line 6
+
+#line 6
+
+#line 6
+type wpa_tmpfs, file_type;
+#line 6
+type_transition wpa tmpfs:file wpa_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow wpa wpa_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute wpa mlstrustedsubject;
+#line 7
+typeattribute wpa unconfineddomain;
+#line 7
+
+type_transition wpa wifi_data_file:sock_file wpa_socket;
+#line 1 "external/sepolicy/release_app.te"
+###
+### Apps signed with the release key (testkey in AOSP).
+###
+
+type release_app, domain;
+permissive release_app;
+
+#line 7
+typeattribute release_app appdomain;
+#line 7
+# Label ashmem objects with our own unique type.
+#line 7
+
+#line 7
+type release_app_tmpfs, file_type;
+#line 7
+type_transition release_app tmpfs:file release_app_tmpfs;
+#line 7
+# Map with PROT_EXEC.
+#line 7
+allow release_app release_app_tmpfs:file { read execute execmod };
+#line 7
+
+#line 7
+
+
+#line 8
+typeattribute release_app platformappdomain;
+#line 8
+typeattribute release_app mlstrustedsubject;
+#line 8
+
+# Access the network.
+
+#line 10
+typeattribute release_app netdomain;
+#line 10
+
+# Access bluetooth.
+
+#line 12
+typeattribute release_app bluetoothdomain;
+#line 12
+
+
+#line 13
+typeattribute release_app mlstrustedsubject;
+#line 13
+typeattribute release_app unconfineddomain;
+#line 13
+
+#line 1 "external/sepolicy/file.te"
+# Filesystem types
+type labeledfs, fs_type;
+type pipefs, fs_type;
+type sockfs, fs_type;
+type rootfs, fs_type;
+type proc, fs_type;
+type qtaguid_proc, fs_type, mlstrustedobject;
+type proc_bluetooth_writable, fs_type;
+type selinuxfs, fs_type;
+type cgroup, fs_type, mlstrustedobject;
+type sysfs, fs_type, mlstrustedobject;
+type sysfs_writable, fs_type, sysfs_type, mlstrustedobject;
+type sysfs_bluetooth_writable, fs_type, sysfs_type, mlstrustedobject;
+type sysfs_nfc_power_writable, fs_type, sysfs_type, mlstrustedobject;
+type sysfs_wake_lock, fs_type, sysfs_type;
+type inotify, fs_type, mlstrustedobject;
+type devpts, fs_type, mlstrustedobject;
+type tmpfs, fs_type;
+type shm, fs_type;
+type mqueue, fs_type;
+type sdcard_internal, sdcard_type, fs_type, mlstrustedobject;
+type sdcard_external, sdcard_type, fs_type, mlstrustedobject;
+type debugfs, fs_type, mlstrustedobject;
+
+# File types
+type unlabeled, file_type;
+# Default type for anything under /system.
+type system_file, file_type;
+# Default type for anything under /data.
+type system_data_file, file_type, data_file_type;
+# /data/drm - DRM plugin data
+type drm_data_file, file_type, data_file_type;
+# /data/anr - ANR traces
+type anr_data_file, file_type, data_file_type, mlstrustedobject;
+# /data/tombstones - core dumps
+type tombstone_data_file, file_type, data_file_type;
+# /data/app - user-installed apps
+type apk_data_file, file_type, data_file_type;
+type apk_tmp_file, file_type, data_file_type, mlstrustedobject;
+# /data/app-private - forward-locked apps
+type apk_private_data_file, file_type, data_file_type;
+type apk_private_tmp_file, file_type, data_file_type, mlstrustedobject;
+# /data/dalvik-cache
+type dalvikcache_data_file, file_type, data_file_type;
+# /data/local - writable by shell
+type shell_data_file, file_type, data_file_type;
+# /data/gps
+type gps_data_file, file_type, data_file_type;
+# /data/misc subdirectories
+type bluetoothd_data_file, file_type, data_file_type;
+type audio_data_file, file_type, data_file_type;
+type bluetooth_data_file, file_type, data_file_type;
+type keystore_data_file, file_type, data_file_type;
+type vpn_data_file, file_type, data_file_type;
+type systemkeys_data_file, file_type, data_file_type;
+type wifi_data_file, file_type, data_file_type;
+type radio_data_file, file_type, data_file_type;
+type nfc_data_file, file_type, data_file_type;
+type camera_data_file, file_type, data_file_type;
+type adb_keys_file, file_type, data_file_type;
+# Compatibility with type names used in vanilla Android 4.3 and 4.4.
+typealias audio_data_file alias audio_firmware_file;
+typealias camera_data_file alias camera_calibration_file;
+# /data/data subdirectories - app sandboxes
+type app_data_file, file_type, data_file_type;
+# Compatibility with type name used in Android 4.3 and 4.4.
+typealias app_data_file alias platform_app_data_file;
+typealias app_data_file alias download_file;
+# Default type for anything under /cache
+type cache_file, file_type, mlstrustedobject;
+# Type for /cache/.*\.{data|restore} and default
+# type for anything under /cache/backup
+type cache_backup_file, file_type, mlstrustedobject;
+# Default type for anything under /efs
+type efs_file, file_type;
+# Type for wallpaper file.
+type wallpaper_file, file_type, mlstrustedobject;
+# /mnt/asec
+type asec_apk_file, file_type, data_file_type;
+# Elements of asec files (/mnt/asec) that are world readable
+type asec_public_file, file_type, data_file_type;
+# /data/app-asec
+type asec_image_file, file_type, data_file_type;
+# /data/backup and /data/secure/backup
+type backup_data_file, file_type, data_file_type, mlstrustedobject;
+# For /data/security
+type security_file, file_type;
+# All devices have bluetooth efs files. But they
+# vary per device, so this type is used in per
+# device policy
+type bluetooth_efs_file, file_type;
+# /sys/devices/system/cpu
+type sysfs_devices_system_cpu, file_type, sysfs_type;
+
+# Socket types
+type adbd_socket, file_type;
+type bluetooth_socket, file_type;
+type dbus_socket, file_type;
+type dnsproxyd_socket, file_type, mlstrustedobject;
+type gps_socket, file_type;
+type installd_socket, file_type;
+type keystore_socket, file_type;
+type netd_socket, file_type;
+type property_socket, file_type;
+type qemud_socket, file_type;
+type racoon_socket, file_type;
+type rild_socket, file_type;
+type rild_debug_socket, file_type;
+type system_wpa_socket, file_type;
+type vold_socket, file_type;
+type wpa_socket, file_type;
+type zygote_socket, file_type;
+
+# UART (for GPS) control proc file
+type gps_control, file_type;
+
+# Allow files to be created in their appropriate filesystems.
+allow fs_type self:filesystem associate;
+allow sysfs_type sysfs:filesystem associate;
+allow file_type labeledfs:filesystem associate;
+allow file_type tmpfs:filesystem associate;
+allow dev_type tmpfs:filesystem associate;
+#line 1 "external/sepolicy/watchdogd.te"
+# watchdogd seclabel is specified in init.<board>.rc
+type watchdogd, domain;
+permissive watchdogd;
+
+#line 4
+typeattribute watchdogd mlstrustedsubject;
+#line 4
+typeattribute watchdogd unconfineddomain;
+#line 4
+
+allow watchdogd rootfs:file entrypoint;
+#line 1 "external/sepolicy/sdcardd.te"
+type sdcardd, domain;
+permissive sdcardd;
+type sdcardd_exec, exec_type, file_type;
+
+
+#line 5
+
+#line 5
+# Allow the necessary permissions.
+#line 5
+
+#line 5
+# Old domain may exec the file and transition to the new domain.
+#line 5
+allow init sdcardd_exec:file { getattr open read execute };
+#line 5
+allow init sdcardd:process transition;
+#line 5
+# New domain is entered by executing the file.
+#line 5
+allow sdcardd sdcardd_exec:file { entrypoint read execute };
+#line 5
+# New domain can send SIGCHLD to its caller.
+#line 5
+allow sdcardd init:process sigchld;
+#line 5
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 5
+#line 5
+#line 5
+allow init sdcardd:process { siginh rlimitinh };
+#line 5
+
+#line 5
+# Make the transition occur by default.
+#line 5
+type_transition init sdcardd_exec:process sdcardd;
+#line 5
+
+#line 5
+
+#line 5
+type sdcardd_tmpfs, file_type;
+#line 5
+type_transition sdcardd tmpfs:file sdcardd_tmpfs;
+#line 5
+# Map with PROT_EXEC.
+#line 5
+allow sdcardd sdcardd_tmpfs:file { read execute execmod };
+#line 5
+
+#line 5
+
+
+#line 6
+typeattribute sdcardd mlstrustedsubject;
+#line 6
+typeattribute sdcardd unconfineddomain;
+#line 6
+
+#line 1 "external/sepolicy/system.te"
+type system_app, domain;
+permissive system_app;
+
+#line 3
+typeattribute system_app appdomain;
+#line 3
+# Label ashmem objects with our own unique type.
+#line 3
+
+#line 3
+type system_app_tmpfs, file_type;
+#line 3
+type_transition system_app tmpfs:file system_app_tmpfs;
+#line 3
+# Map with PROT_EXEC.
+#line 3
+allow system_app system_app_tmpfs:file { read execute execmod };
+#line 3
+
+#line 3
+
+
+#line 4
+typeattribute system_app mlstrustedsubject;
+#line 4
+typeattribute system_app unconfineddomain;
+#line 4
+
+
+type system, domain;
+permissive system;
+
+#line 8
+typeattribute system mlstrustedsubject;
+#line 8
+typeattribute system unconfineddomain;
+#line 8
+;
+
+#line 9
+typeattribute system relabeltodomain;
+#line 9
+;
+
+# Relabel /data/anr.
+allow system system_data_file:dir relabelfrom;
+allow system anr_data_file:dir relabelto;
+
+# Create a socket for receiving info from wpa.
+type_transition system wifi_data_file:sock_file system_wpa_socket;
+allow system self:zygote { specifyids specifyrlimits specifyseinfo };
+
+allow system backup_data_file:dir relabelto;
+allow system apk_data_file:file relabelto;
+allow system apk_tmp_file:file relabelto;
+allow system apk_private_tmp_file:file relabelto;
+
+# Access to wake locks
+allow system sysfs_wake_lock:file { { getattr open read ioctl lock } { open append write } };
+
+# BackupManagerService lets PMS create a data backup file
+allow system cache_backup_file:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+# Relabel /data/backup
+allow system backup_data_file:dir { relabelto relabelfrom };
+# Relabel /cache/.*\.{data|restore}
+allow system cache_backup_file:file { relabelto relabelfrom };
+# LocalTransport creates and relabels /cache/backup
+allow system cache_backup_file:dir { relabelto relabelfrom { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } } };
+#line 1 "external/sepolicy/radio.te"
+# phone subsystem
+type radio, domain;
+permissive radio;
+
+#line 4
+typeattribute radio appdomain;
+#line 4
+# Label ashmem objects with our own unique type.
+#line 4
+
+#line 4
+type radio_tmpfs, file_type;
+#line 4
+type_transition radio tmpfs:file radio_tmpfs;
+#line 4
+# Map with PROT_EXEC.
+#line 4
+allow radio radio_tmpfs:file { read execute execmod };
+#line 4
+
+#line 4
+
+
+#line 5
+typeattribute radio netdomain;
+#line 5
+
+
+#line 6
+typeattribute radio bluetoothdomain;
+#line 6
+
+
+
+#line 8
+typeattribute radio mlstrustedsubject;
+#line 8
+typeattribute radio unconfineddomain;
+#line 1 "external/sepolicy/shared_app.te"
+###
+### Apps signed with the shared key.
+###
+
+type shared_app, domain;
+permissive shared_app;
+
+#line 7
+typeattribute shared_app appdomain;
+#line 7
+# Label ashmem objects with our own unique type.
+#line 7
+
+#line 7
+type shared_app_tmpfs, file_type;
+#line 7
+type_transition shared_app tmpfs:file shared_app_tmpfs;
+#line 7
+# Map with PROT_EXEC.
+#line 7
+allow shared_app shared_app_tmpfs:file { read execute execmod };
+#line 7
+
+#line 7
+
+
+#line 8
+typeattribute shared_app platformappdomain;
+#line 8
+typeattribute shared_app mlstrustedsubject;
+#line 8
+
+# Access the network.
+
+#line 10
+typeattribute shared_app netdomain;
+#line 10
+
+# Access bluetooth.
+
+#line 12
+typeattribute shared_app bluetoothdomain;
+#line 12
+
+
+#line 13
+typeattribute shared_app mlstrustedsubject;
+#line 13
+typeattribute shared_app unconfineddomain;
+#line 13
+
+#line 1 "external/sepolicy/init.te"
+# init switches to init domain (via init.rc).
+type init, domain;
+permissive init;
+# init is unconfined.
+
+#line 5
+typeattribute init mlstrustedsubject;
+#line 5
+typeattribute init unconfineddomain;
+#line 5
+
+
+#line 6
+type init_tmpfs, file_type;
+#line 6
+type_transition init tmpfs:file init_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow init init_tmpfs:file { read execute execmod };
+#line 6
+
+
+#line 7
+typeattribute init relabeltodomain;
+#line 7
+
+# add a rule to handle unlabelled mounts
+allow init unlabeled:filesystem mount;
+
+allow init {fs_type dev_type file_type}:{ dir { { chr_file blk_file } { file lnk_file sock_file fifo_file } } } relabelto;
+allow init kernel:security load_policy;
+#line 1 "external/sepolicy/hostapd.te"
+type hostapd, domain;
+permissive hostapd;
+type hostapd_exec, exec_type, file_type;
+
+
+#line 5
+
+#line 5
+# Allow the necessary permissions.
+#line 5
+
+#line 5
+# Old domain may exec the file and transition to the new domain.
+#line 5
+allow init hostapd_exec:file { getattr open read execute };
+#line 5
+allow init hostapd:process transition;
+#line 5
+# New domain is entered by executing the file.
+#line 5
+allow hostapd hostapd_exec:file { entrypoint read execute };
+#line 5
+# New domain can send SIGCHLD to its caller.
+#line 5
+allow hostapd init:process sigchld;
+#line 5
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 5
+#line 5
+#line 5
+allow init hostapd:process { siginh rlimitinh };
+#line 5
+
+#line 5
+# Make the transition occur by default.
+#line 5
+type_transition init hostapd_exec:process hostapd;
+#line 5
+
+#line 5
+
+#line 5
+type hostapd_tmpfs, file_type;
+#line 5
+type_transition hostapd tmpfs:file hostapd_tmpfs;
+#line 5
+# Map with PROT_EXEC.
+#line 5
+allow hostapd hostapd_tmpfs:file { read execute execmod };
+#line 5
+
+#line 5
+
+
+#line 6
+typeattribute hostapd netdomain;
+#line 6
+
+
+#line 7
+typeattribute hostapd mlstrustedsubject;
+#line 7
+typeattribute hostapd unconfineddomain;
+#line 7
+
+#line 1 "external/sepolicy/zygote.te"
+# zygote
+type zygote, domain;
+type zygote_exec, exec_type, file_type;
+
+
+#line 5
+
+#line 5
+# Allow the necessary permissions.
+#line 5
+
+#line 5
+# Old domain may exec the file and transition to the new domain.
+#line 5
+allow init zygote_exec:file { getattr open read execute };
+#line 5
+allow init zygote:process transition;
+#line 5
+# New domain is entered by executing the file.
+#line 5
+allow zygote zygote_exec:file { entrypoint read execute };
+#line 5
+# New domain can send SIGCHLD to its caller.
+#line 5
+allow zygote init:process sigchld;
+#line 5
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 5
+#line 5
+#line 5
+allow init zygote:process { siginh rlimitinh };
+#line 5
+
+#line 5
+# Make the transition occur by default.
+#line 5
+type_transition init zygote_exec:process zygote;
+#line 5
+
+#line 5
+
+#line 5
+type zygote_tmpfs, file_type;
+#line 5
+type_transition zygote tmpfs:file zygote_tmpfs;
+#line 5
+# Map with PROT_EXEC.
+#line 5
+allow zygote zygote_tmpfs:file { read execute execmod };
+#line 5
+
+#line 5
+
+typeattribute zygote mlstrustedsubject;
+# Override DAC on files and switch uid/gid.
+allow zygote self:capability { dac_override setgid setuid fowner };
+# Drop capabilities from bounding set.
+allow zygote self:capability setpcap;
+# Switch SELinux context to app domains.
+allow zygote system:process dyntransition;
+allow zygote appdomain:process dyntransition;
+# Allow zygote to read app data dirs (b/10455872)
+allow zygote appdomain:dir { getattr search };
+allow zygote appdomain:file { { getattr open read ioctl lock } };
+# Move children into the peer process group.
+allow zygote system:process { getpgid setpgid };
+allow zygote appdomain:process { getpgid setpgid };
+# Write to system data.
+allow zygote system_data_file:dir { { open getattr read search ioctl } { open search write add_name remove_name } };
+allow zygote system_data_file:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+allow zygote dalvikcache_data_file:dir { { open getattr read search ioctl } { open search write add_name remove_name } };
+allow zygote dalvikcache_data_file:file { { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } } { getattr execute execute_no_trans } };
+# Execute dexopt.
+allow zygote system_file:file { getattr execute execute_no_trans };
+# Control cgroups.
+allow zygote cgroup:dir { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } };
+allow zygote self:capability sys_admin;
+# Check validity of SELinux context before use.
+
+#line 31
+allow zygote selinuxfs:dir { open getattr read search ioctl };
+#line 31
+allow zygote selinuxfs:file { { getattr open read ioctl lock } { open append write } };
+#line 31
+allow zygote kernel:security check_context;
+#line 31
+
+# Check SELinux permissions.
+
+#line 33
+allow zygote selinuxfs:dir { open getattr read search ioctl };
+#line 33
+allow zygote selinuxfs:file { { getattr open read ioctl lock } { open append write } };
+#line 33
+allow zygote kernel:security compute_av;
+#line 33
+allow zygote self:netlink_selinux_socket *;
+#line 33
+
+# Read /seapp_contexts and /data/security/seapp_contexts
+
+#line 35
+allow zygote security_file:dir { open getattr read search ioctl };
+#line 35
+allow zygote security_file:file { getattr open read ioctl lock };
+#line 35
+allow zygote security_file:lnk_file read;
+#line 35
+allow zygote selinuxfs:dir { open getattr read search ioctl };
+#line 35
+allow zygote selinuxfs:file { getattr open read ioctl lock };
+#line 35
+allow zygote rootfs:dir { open getattr read search ioctl };
+#line 35
+allow zygote rootfs:file { getattr open read ioctl lock };
+#line 35
+
+
+# Setting up /storage/emulated.
+allow zygote rootfs:dir mounton;
+allow zygote sdcard_type:dir { write search setattr create add_name mounton };
+allow zygote tmpfs:dir { write create add_name setattr mounton search };
+allow zygote tmpfs:filesystem mount;
+allow zygote labeledfs:filesystem remount;
+
+# Handle --invoke-with command when launching Zygote with a wrapper command.
+allow zygote zygote_exec:file { execute_no_trans open };
+
+# handle bugreports b/10498304
+allow zygote ashmem_device:chr_file execute;
+allow zygote init:binder call;
+allow zygote shell_data_file:file { write getattr };
+allow zygote system:binder { transfer call };
+allow zygote servicemanager:binder { call };
+
+# zygote talks to init
+
+#line 56
+allow zygote property_socket:sock_file write;
+#line 56
+allow zygote init:unix_stream_socket connectto;
+#line 56
+;
+allow zygote system_prop:property_service set;
+allow zygote init_shell:process sigchld;
+#line 1 "external/sepolicy/racoon.te"
+# IKE key management daemon
+type racoon, domain;
+permissive racoon;
+type racoon_exec, exec_type, file_type;
+
+
+#line 6
+typeattribute racoon mlstrustedsubject;
+#line 6
+typeattribute racoon unconfineddomain;
+#line 6
+
+#line 1 "external/sepolicy/debuggerd.te"
+# debugger interface
+type debuggerd, domain;
+permissive debuggerd;
+type debuggerd_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init debuggerd_exec:file { getattr open read execute };
+#line 6
+allow init debuggerd:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow debuggerd debuggerd_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow debuggerd init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init debuggerd:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init debuggerd_exec:process debuggerd;
+#line 6
+
+#line 6
+
+#line 6
+type debuggerd_tmpfs, file_type;
+#line 6
+type_transition debuggerd tmpfs:file debuggerd_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow debuggerd debuggerd_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute debuggerd mlstrustedsubject;
+#line 7
+typeattribute debuggerd unconfineddomain;
+#line 7
+
+
+#line 8
+typeattribute debuggerd relabeltodomain;
+#line 8
+
+allow debuggerd tombstone_data_file:dir relabelto;
+#line 1 "external/sepolicy/net.te"
+# Network types
+type node, node_type;
+type netif, netif_type;
+type port, port_type;
+#line 1 "external/sepolicy/property.te"
+type default_prop, property_type;
+type shell_prop, property_type;
+type radio_prop, property_type;
+type system_prop, property_type;
+type vold_prop, property_type;
+type rild_prop, property_type;
+type ctl_default_prop, property_type;
+type ctl_dumpstate_prop, property_type;
+type ctl_rildaemon_prop, property_type;
+type audio_prop, property_type;
+type security_prop, property_type;
+type bluetooth_prop, property_type;
+type powerctl_prop, property_type;
+#line 1 "external/sepolicy/recovery.te"
+# recovery console (used in recovery init.rc for /sbin/recovery)
+type recovery, domain;
+allow recovery rootfs:file entrypoint;
+
+#line 4
+typeattribute recovery mlstrustedsubject;
+#line 4
+typeattribute recovery unconfineddomain;
+#line 4
+
+
+#line 5
+typeattribute recovery relabeltodomain;
+#line 5
+
+
+allow recovery {fs_type dev_type -kmem_device file_type}:{ dir { { chr_file blk_file } { file lnk_file sock_file fifo_file } } } relabelto;
+allow recovery unlabeled:filesystem mount;
+
+allow recovery self:process execmem;
+allow recovery ashmem_device:chr_file execute;
+allow recovery tmpfs:file { { getattr open read ioctl lock } { getattr execute execute_no_trans } };
+#line 1 "external/sepolicy/su.te"
+type su, domain;
+permissive su;
+type su_exec, exec_type, file_type;
+
+#line 4
+# Allow the necessary permissions.
+#line 4
+
+#line 4
+# Old domain may exec the file and transition to the new domain.
+#line 4
+allow shell su_exec:file { getattr open read execute };
+#line 4
+allow shell su:process transition;
+#line 4
+# New domain is entered by executing the file.
+#line 4
+allow su su_exec:file { entrypoint read execute };
+#line 4
+# New domain can send SIGCHLD to its caller.
+#line 4
+allow su shell:process sigchld;
+#line 4
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 4
+#line 4
+#line 4
+allow shell su:process { siginh rlimitinh };
+#line 4
+
+#line 4
+# Make the transition occur by default.
+#line 4
+type_transition shell su_exec:process su;
+#line 4
+
+
+# su is unconfined.
+
+#line 7
+typeattribute su mlstrustedsubject;
+#line 7
+typeattribute su unconfineddomain;
+#line 7
+
+#line 1 "external/sepolicy/ping.te"
+type ping, domain;
+permissive ping;
+type ping_exec, exec_type, file_type;
+
+#line 4
+# Allow the necessary permissions.
+#line 4
+
+#line 4
+# Old domain may exec the file and transition to the new domain.
+#line 4
+allow shell ping_exec:file { getattr open read execute };
+#line 4
+allow shell ping:process transition;
+#line 4
+# New domain is entered by executing the file.
+#line 4
+allow ping ping_exec:file { entrypoint read execute };
+#line 4
+# New domain can send SIGCHLD to its caller.
+#line 4
+allow ping shell:process sigchld;
+#line 4
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 4
+#line 4
+#line 4
+allow shell ping:process { siginh rlimitinh };
+#line 4
+
+#line 4
+# Make the transition occur by default.
+#line 4
+type_transition shell ping_exec:process ping;
+#line 4
+
+
+#line 5
+typeattribute ping mlstrustedsubject;
+#line 5
+typeattribute ping unconfineddomain;
+#line 5
+
+#line 1 "external/sepolicy/healthd.te"
+# healthd seclabel is specified in init.rc since
+# it lives in the rootfs and has no unique file type.
+type healthd, domain;
+permissive healthd;
+type healthd_exec, exec_type, file_type;
+
+
+#line 7
+
+#line 7
+# Allow the necessary permissions.
+#line 7
+
+#line 7
+# Old domain may exec the file and transition to the new domain.
+#line 7
+allow init healthd_exec:file { getattr open read execute };
+#line 7
+allow init healthd:process transition;
+#line 7
+# New domain is entered by executing the file.
+#line 7
+allow healthd healthd_exec:file { entrypoint read execute };
+#line 7
+# New domain can send SIGCHLD to its caller.
+#line 7
+allow healthd init:process sigchld;
+#line 7
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 7
+#line 7
+#line 7
+allow init healthd:process { siginh rlimitinh };
+#line 7
+
+#line 7
+# Make the transition occur by default.
+#line 7
+type_transition init healthd_exec:process healthd;
+#line 7
+
+#line 7
+
+#line 7
+type healthd_tmpfs, file_type;
+#line 7
+type_transition healthd tmpfs:file healthd_tmpfs;
+#line 7
+# Map with PROT_EXEC.
+#line 7
+allow healthd healthd_tmpfs:file { read execute execmod };
+#line 7
+
+#line 7
+
+
+#line 8
+typeattribute healthd mlstrustedsubject;
+#line 8
+typeattribute healthd unconfineddomain;
+#line 8
+
+allow healthd rootfs:file entrypoint;
+
+#line 10
+type_transition healthd device:chr_file klog_device "__kmsg__";
+#line 10
+allow healthd klog_device:chr_file { create open write unlink };
+#line 10
+allow healthd device:dir { add_name remove_name };
+#line 10
+
+
+
+#line 1 "external/sepolicy/domain.te"
+# Rules for all domains.
+
+# Allow reaping by init.
+allow domain init:process sigchld;
+
+# Read access to properties mapping.
+allow domain kernel:fd use;
+allow domain tmpfs:file { read getattr };
+
+# Search /storage/emulated tmpfs mount.
+allow domain tmpfs:dir { open getattr read search ioctl };
+
+# binder adjusts the nice value during IPC.
+allow domain self:capability sys_nice;
+
+# Intra-domain accesses.
+allow domain self:process ~{ execstack execheap ptrace };
+allow domain self:fd use;
+allow domain self:dir { open getattr read search ioctl };
+allow domain self:lnk_file { getattr open read ioctl lock };
+allow domain self:{ fifo_file file } { { getattr open read ioctl lock } { open append write } };
+allow domain self:{ unix_dgram_socket unix_stream_socket } *;
+
+# Inherit or receive open files from others.
+allow domain init:fd use;
+allow domain system:fd use;
+
+# Connect to adbd and use a socket transferred from it.
+allow domain adbd:unix_stream_socket connectto;
+allow domain adbd:fd use;
+allow domain adbd:unix_stream_socket { getattr read write shutdown };
+
+###
+### Talk to debuggerd.
+###
+allow domain debuggerd:process sigchld;
+allow domain debuggerd:unix_stream_socket connectto;
+# b/9858255 - debuggerd sockets are not getting properly labeled.
+# TODO: Remove this temporary workaround.
+allow domain init:unix_stream_socket connectto;
+
+# Root fs.
+allow domain rootfs:dir { open getattr read search ioctl };
+allow domain rootfs:file { getattr open read ioctl lock };
+allow domain rootfs:lnk_file { read getattr };
+
+# Device accesses.
+allow domain device:dir search;
+allow domain dev_type:lnk_file read;
+allow domain devpts:dir search;
+allow domain device:file read;
+allow domain socket_device:dir search;
+allow domain owntty_device:chr_file { { getattr open read ioctl lock } { open append write } };
+allow domain null_device:chr_file { { getattr open read ioctl lock } { open append write } };
+allow domain zero_device:chr_file { getattr open read ioctl lock };
+allow domain ashmem_device:chr_file { { getattr open read ioctl lock } { open append write } };
+allow domain binder_device:chr_file { { getattr open read ioctl lock } { open append write } };
+allow domain ptmx_device:chr_file { { getattr open read ioctl lock } { open append write } };
+allow domain powervr_device:chr_file { { getattr open read ioctl lock } { open append write } };
+allow domain log_device:dir search;
+allow domain log_device:chr_file { { getattr open read ioctl lock } { open append write } };
+allow domain nv_device:chr_file { { getattr open read ioctl lock } { open append write } };
+allow domain alarm_device:chr_file { getattr open read ioctl lock };
+allow domain urandom_device:chr_file { getattr open read ioctl lock };
+allow domain random_device:chr_file { getattr open read ioctl lock };
+allow domain properties_device:file { getattr open read ioctl lock };
+
+# Filesystem accesses.
+allow domain fs_type:filesystem getattr;
+allow domain fs_type:dir getattr;
+
+# System file accesses.
+allow domain system_file:dir { open getattr read search ioctl };
+allow domain system_file:file { getattr open read ioctl lock };
+allow domain system_file:file execute;
+allow domain system_file:lnk_file read;
+
+# Read files already opened under /data.
+allow domain system_data_file:dir { search getattr };
+allow domain system_data_file:file { getattr read };
+allow domain system_data_file:lnk_file read;
+
+# Read apk files under /data/app.
+allow domain apk_data_file:dir { getattr search };
+allow domain apk_data_file:file { getattr open read ioctl lock };
+
+# Read /data/dalvik-cache.
+allow domain dalvikcache_data_file:dir { search getattr };
+allow domain dalvikcache_data_file:file { getattr open read ioctl lock };
+
+# Read already opened /cache files.
+allow domain cache_file:dir { open getattr read search ioctl };
+allow domain cache_file:file { getattr read };
+allow domain cache_file:lnk_file read;
+
+# For /acct/uid/*/tasks.
+allow domain cgroup:dir { search write };
+allow domain cgroup:file { open append write };
+
+#Allow access to ion memory allocation device
+allow domain ion_device:chr_file { { getattr open read ioctl lock } { open append write } };
+
+# For /sys/qemu_trace files in the emulator.
+bool in_qemu false;
+if (in_qemu) {
+allow domain sysfs:file { { getattr open read ioctl lock } { open append write } };
+}
+allow domain sysfs_writable:file { { getattr open read ioctl lock } { open append write } };
+
+# Read access to pseudo filesystems.
+
+#line 111
+allow domain proc:dir { open getattr read search ioctl };
+#line 111
+allow domain proc:{ file lnk_file } { getattr open read ioctl lock };
+#line 111
+
+
+#line 112
+allow domain sysfs:dir { open getattr read search ioctl };
+#line 112
+allow domain sysfs:{ file lnk_file } { getattr open read ioctl lock };
+#line 112
+
+
+#line 113
+allow domain sysfs_devices_system_cpu:dir { open getattr read search ioctl };
+#line 113
+allow domain sysfs_devices_system_cpu:{ file lnk_file } { getattr open read ioctl lock };
+#line 113
+
+
+#line 114
+allow domain inotify:dir { open getattr read search ioctl };
+#line 114
+allow domain inotify:{ file lnk_file } { getattr open read ioctl lock };
+#line 114
+
+
+#line 115
+allow domain cgroup:dir { open getattr read search ioctl };
+#line 115
+allow domain cgroup:{ file lnk_file } { getattr open read ioctl lock };
+#line 115
+
+
+# debugfs access
+allow domain debugfs:dir { open getattr read search ioctl };
+allow domain debugfs:file { open append write };
+
+# security files
+allow domain security_file:dir { search getattr };
+allow domain security_file:file getattr;
+
+# World readable asec image contents
+allow domain asec_public_file:file { getattr open read ioctl lock };
+allow domain { asec_public_file asec_apk_file }:dir { open getattr read search ioctl };
+
+######## Backwards compatibility - Unlabeled files ############
+
+# Revert to DAC rules when looking at unlabeled files. Over time, the number
+# of unlabeled files should decrease.
+# TODO: delete these rules in the future.
+#
+# Note on relabelfrom: We allow any app relabelfrom, but without the relabelto
+# capability, it's essentially useless. This is needed to allow an app with
+# relabelto to relabel unlabeled files.
+#
+allow domain unlabeled:file { { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } } { { { getattr open read ioctl lock } { open append write } } { getattr execute execute_no_trans } } relabelfrom };
+allow domain unlabeled:dir { { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } } relabelfrom };
+allow domain unlabeled:lnk_file { { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } } };
+neverallow { domain -relabeltodomain } *:{ dir { { chr_file blk_file } { file lnk_file sock_file fifo_file } } } relabelto;
+
+###
+### neverallow rules
+###
+
+# Only init should be able to load SELinux policies
+neverallow { domain -init } kernel:security load_policy;
+
+# Ensure that all entrypoint executables are in exec_type.
+neverallow domain { file_type -exec_type }:file entrypoint;
+#line 1 "external/sepolicy/dnsmasq.te"
+type dnsmasq, domain;
+permissive dnsmasq;
+type dnsmasq_exec, exec_type, file_type;
+
+
+#line 5
+
+#line 5
+# Allow the necessary permissions.
+#line 5
+
+#line 5
+# Old domain may exec the file and transition to the new domain.
+#line 5
+allow init dnsmasq_exec:file { getattr open read execute };
+#line 5
+allow init dnsmasq:process transition;
+#line 5
+# New domain is entered by executing the file.
+#line 5
+allow dnsmasq dnsmasq_exec:file { entrypoint read execute };
+#line 5
+# New domain can send SIGCHLD to its caller.
+#line 5
+allow dnsmasq init:process sigchld;
+#line 5
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 5
+#line 5
+#line 5
+allow init dnsmasq:process { siginh rlimitinh };
+#line 5
+
+#line 5
+# Make the transition occur by default.
+#line 5
+type_transition init dnsmasq_exec:process dnsmasq;
+#line 5
+
+#line 5
+
+#line 5
+type dnsmasq_tmpfs, file_type;
+#line 5
+type_transition dnsmasq tmpfs:file dnsmasq_tmpfs;
+#line 5
+# Map with PROT_EXEC.
+#line 5
+allow dnsmasq dnsmasq_tmpfs:file { read execute execmod };
+#line 5
+
+#line 5
+
+
+#line 6
+typeattribute dnsmasq netdomain;
+#line 6
+
+
+#line 7
+typeattribute dnsmasq mlstrustedsubject;
+#line 7
+typeattribute dnsmasq unconfineddomain;
+#line 7
+
+#line 1 "external/sepolicy/keystore.te"
+type keystore, domain;
+permissive keystore;
+type keystore_exec, exec_type, file_type;
+
+# keystore daemon
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init keystore_exec:file { getattr open read execute };
+#line 6
+allow init keystore:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow keystore keystore_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow keystore init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init keystore:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init keystore_exec:process keystore;
+#line 6
+
+#line 6
+
+#line 6
+type keystore_tmpfs, file_type;
+#line 6
+type_transition keystore tmpfs:file keystore_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow keystore keystore_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute keystore mlstrustedsubject;
+#line 7
+typeattribute keystore unconfineddomain;
+#line 7
+
+#line 1 "external/sepolicy/bluetoothd.te"
+# bluetoothd - bluetooth daemon
+type bluetoothd, domain;
+permissive bluetoothd;
+type bluetoothd_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init bluetoothd_exec:file { getattr open read execute };
+#line 6
+allow init bluetoothd:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow bluetoothd bluetoothd_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow bluetoothd init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init bluetoothd:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init bluetoothd_exec:process bluetoothd;
+#line 6
+
+#line 6
+
+#line 6
+type bluetoothd_tmpfs, file_type;
+#line 6
+type_transition bluetoothd tmpfs:file bluetoothd_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow bluetoothd bluetoothd_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute bluetoothd mlstrustedsubject;
+#line 7
+typeattribute bluetoothd unconfineddomain;
+#line 7
+
+#line 1 "external/sepolicy/media_app.te"
+###
+### Apps signed with the media key.
+###
+
+type media_app, domain;
+permissive media_app;
+
+#line 7
+typeattribute media_app appdomain;
+#line 7
+# Label ashmem objects with our own unique type.
+#line 7
+
+#line 7
+type media_app_tmpfs, file_type;
+#line 7
+type_transition media_app tmpfs:file media_app_tmpfs;
+#line 7
+# Map with PROT_EXEC.
+#line 7
+allow media_app media_app_tmpfs:file { read execute execmod };
+#line 7
+
+#line 7
+
+
+#line 8
+typeattribute media_app platformappdomain;
+#line 8
+typeattribute media_app mlstrustedsubject;
+#line 8
+
+# Access the network.
+
+#line 10
+typeattribute media_app netdomain;
+#line 10
+
+
+#line 11
+typeattribute media_app mlstrustedsubject;
+#line 11
+typeattribute media_app unconfineddomain;
+#line 11
+
+
+#line 12
+typeattribute media_app relabeltodomain;
+#line 12
+
+allow media_app app_data_file:dir relabelfrom;
+#line 1 "external/sepolicy/netd.te"
+# network manager
+type netd, domain;
+type netd_exec, exec_type, file_type;
+
+
+#line 5
+
+#line 5
+# Allow the necessary permissions.
+#line 5
+
+#line 5
+# Old domain may exec the file and transition to the new domain.
+#line 5
+allow init netd_exec:file { getattr open read execute };
+#line 5
+allow init netd:process transition;
+#line 5
+# New domain is entered by executing the file.
+#line 5
+allow netd netd_exec:file { entrypoint read execute };
+#line 5
+# New domain can send SIGCHLD to its caller.
+#line 5
+allow netd init:process sigchld;
+#line 5
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 5
+#line 5
+#line 5
+allow init netd:process { siginh rlimitinh };
+#line 5
+
+#line 5
+# Make the transition occur by default.
+#line 5
+type_transition init netd_exec:process netd;
+#line 5
+
+#line 5
+
+#line 5
+type netd_tmpfs, file_type;
+#line 5
+type_transition netd tmpfs:file netd_tmpfs;
+#line 5
+# Map with PROT_EXEC.
+#line 5
+allow netd netd_tmpfs:file { read execute execmod };
+#line 5
+
+#line 5
+
+allow netd self:capability { net_admin net_raw kill fsetid };
+allow netd self:netlink_kobject_uevent_socket *;
+allow netd self:netlink_route_socket *;
+allow netd self:netlink_nflog_socket *;
+allow netd self:rawip_socket *;
+allow netd self:{ tcp_socket udp_socket } *;
+allow netd node:{ tcp_socket udp_socket } node_bind;
+allow netd port:{ tcp_socket udp_socket } name_bind;
+allow netd port:tcp_socket name_connect;
+allow netd self:unix_stream_socket *;
+allow netd shell_exec:file { { getattr open read ioctl lock } { getattr execute execute_no_trans } };
+allow netd system_file:file { getattr execute execute_no_trans };
+allow netd devpts:chr_file { { getattr open read ioctl lock } { open append write } };
+
+# For /proc/sys/net/ipv[46]/route/flush.
+# XXX Split /proc/sys/net into its own type.
+allow netd proc:file write;
+
+# For /sys/modules/bcmdhd/parameters/firmware_path
+# XXX Split into its own type.
+allow netd sysfs:file write;
+
+# Set dhcp lease for PAN connection
+
+#line 29
+allow netd property_socket:sock_file write;
+#line 29
+allow netd init:unix_stream_socket connectto;
+#line 29
+
+allow netd system_prop:property_service set;
+
+# Connect to PAN
+
+#line 33
+# Allow the necessary permissions.
+#line 33
+
+#line 33
+# Old domain may exec the file and transition to the new domain.
+#line 33
+allow netd dhcp_exec:file { getattr open read execute };
+#line 33
+allow netd dhcp:process transition;
+#line 33
+# New domain is entered by executing the file.
+#line 33
+allow dhcp dhcp_exec:file { entrypoint read execute };
+#line 33
+# New domain can send SIGCHLD to its caller.
+#line 33
+allow dhcp netd:process sigchld;
+#line 33
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 33
+#line 33
+#line 33
+allow netd dhcp:process { siginh rlimitinh };
+#line 33
+
+#line 33
+# Make the transition occur by default.
+#line 33
+type_transition netd dhcp_exec:process dhcp;
+#line 33
+
+allow netd dhcp:process signal;
+
+# Needed to update /data/misc/wifi/hostapd.conf
+# TODO: See what we can do to reduce the need for
+# these capabilities
+allow netd self:capability { dac_override chown fowner };
+allow netd wifi_data_file:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+allow netd wifi_data_file:dir { { open getattr read search ioctl } { open search write add_name remove_name } };
+
+# Allow netd to spawn hostapd in it's own domain
+
+#line 44
+# Allow the necessary permissions.
+#line 44
+
+#line 44
+# Old domain may exec the file and transition to the new domain.
+#line 44
+allow netd hostapd_exec:file { getattr open read execute };
+#line 44
+allow netd hostapd:process transition;
+#line 44
+# New domain is entered by executing the file.
+#line 44
+allow hostapd hostapd_exec:file { entrypoint read execute };
+#line 44
+# New domain can send SIGCHLD to its caller.
+#line 44
+allow hostapd netd:process sigchld;
+#line 44
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 44
+#line 44
+#line 44
+allow netd hostapd:process { siginh rlimitinh };
+#line 44
+
+#line 44
+# Make the transition occur by default.
+#line 44
+type_transition netd hostapd_exec:process hostapd;
+#line 44
+
+allow netd hostapd:process signal;
+
+# Allow netd to spawn dnsmasq in it's own domain
+
+#line 48
+# Allow the necessary permissions.
+#line 48
+
+#line 48
+# Old domain may exec the file and transition to the new domain.
+#line 48
+allow netd dnsmasq_exec:file { getattr open read execute };
+#line 48
+allow netd dnsmasq:process transition;
+#line 48
+# New domain is entered by executing the file.
+#line 48
+allow dnsmasq dnsmasq_exec:file { entrypoint read execute };
+#line 48
+# New domain can send SIGCHLD to its caller.
+#line 48
+allow dnsmasq netd:process sigchld;
+#line 48
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 48
+#line 48
+#line 48
+allow netd dnsmasq:process { siginh rlimitinh };
+#line 48
+
+#line 48
+# Make the transition occur by default.
+#line 48
+type_transition netd dnsmasq_exec:process dnsmasq;
+#line 48
+
+allow netd dnsmasq:process signal;
+
+# Allow netd to start clatd in its own domain
+
+#line 52
+# Allow the necessary permissions.
+#line 52
+
+#line 52
+# Old domain may exec the file and transition to the new domain.
+#line 52
+allow netd clatd_exec:file { getattr open read execute };
+#line 52
+allow netd clatd:process transition;
+#line 52
+# New domain is entered by executing the file.
+#line 52
+allow clatd clatd_exec:file { entrypoint read execute };
+#line 52
+# New domain can send SIGCHLD to its caller.
+#line 52
+allow clatd netd:process sigchld;
+#line 52
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 52
+#line 52
+#line 52
+allow netd clatd:process { siginh rlimitinh };
+#line 52
+
+#line 52
+# Make the transition occur by default.
+#line 52
+type_transition netd clatd_exec:process clatd;
+#line 52
+
+allow netd clatd:process signal;
+
+# Support netd running mdnsd
+# TODO: prune this back further
+allow netd ctl_default_prop:property_service set;
+allow netd device:sock_file write;
+
+###
+### Neverallow rules
+###
+### netd should NEVER do any of this
+
+# Block device access.
+neverallow netd dev_type:blk_file { read write };
+
+# Kernel memory access.
+neverallow netd kmem_device:chr_file { read write };
+
+# Setting SELinux enforcing status or booleans.
+# Conditionally allowed to system_app for SEAndroidManager.
+neverallow netd kernel:security { setenforce setbool };
+
+# Load security policy.
+neverallow netd kernel:security load_policy;
+
+# ptrace any other app
+neverallow netd { domain }:process ptrace;
+
+# Write to /system.
+neverallow netd system_file:{ dir { { chr_file blk_file } { file lnk_file sock_file fifo_file } } } write;
+
+# Write to files in /data/data or system files on /data
+neverallow netd { app_data_file system_data_file }:{ dir { { chr_file blk_file } { file lnk_file sock_file fifo_file } } } write;
+#line 1 "external/sepolicy/ppp.te"
+# Point to Point Protocol daemon
+type ppp, domain;
+permissive ppp;
+type ppp_device, dev_type;
+type ppp_exec, exec_type, file_type;
+type ppp_system_file, file_type;
+
+#line 7
+typeattribute ppp mlstrustedsubject;
+#line 7
+typeattribute ppp unconfineddomain;
+#line 7
+
+
+#line 8
+# Allow the necessary permissions.
+#line 8
+
+#line 8
+# Old domain may exec the file and transition to the new domain.
+#line 8
+allow mtp ppp_exec:file { getattr open read execute };
+#line 8
+allow mtp ppp:process transition;
+#line 8
+# New domain is entered by executing the file.
+#line 8
+allow ppp ppp_exec:file { entrypoint read execute };
+#line 8
+# New domain can send SIGCHLD to its caller.
+#line 8
+allow ppp mtp:process sigchld;
+#line 8
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 8
+#line 8
+#line 8
+allow mtp ppp:process { siginh rlimitinh };
+#line 8
+
+#line 8
+# Make the transition occur by default.
+#line 8
+type_transition mtp ppp_exec:process ppp;
+#line 8
+
+#line 1 "external/sepolicy/drmserver.te"
+# drmserver - DRM service
+type drmserver, domain;
+permissive drmserver;
+type drmserver_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init drmserver_exec:file { getattr open read execute };
+#line 6
+allow init drmserver:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow drmserver drmserver_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow drmserver init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init drmserver:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init drmserver_exec:process drmserver;
+#line 6
+
+#line 6
+
+#line 6
+type drmserver_tmpfs, file_type;
+#line 6
+type_transition drmserver tmpfs:file drmserver_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow drmserver drmserver_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute drmserver mlstrustedsubject;
+#line 7
+typeattribute drmserver unconfineddomain;
+#line 7
+
+#line 1 "external/sepolicy/shell.te"
+# Domain for shell processes spawned by ADB
+type shell, domain;
+type shell_exec, exec_type, file_type;
+
+#line 4
+typeattribute shell mlstrustedsubject;
+#line 4
+typeattribute shell unconfineddomain;
+#line 4
+
+
+# Run app_process.
+# XXX Split into its own domain?
+
+#line 8
+typeattribute shell appdomain;
+#line 8
+# Label ashmem objects with our own unique type.
+#line 8
+
+#line 8
+type shell_tmpfs, file_type;
+#line 8
+type_transition shell tmpfs:file shell_tmpfs;
+#line 8
+# Map with PROT_EXEC.
+#line 8
+allow shell shell_tmpfs:file { read execute execmod };
+#line 8
+
+#line 8
+
+#line 1 "external/sepolicy/installd.te"
+# installer daemon
+type installd, domain;
+type installd_exec, exec_type, file_type;
+
+
+#line 5
+
+#line 5
+# Allow the necessary permissions.
+#line 5
+
+#line 5
+# Old domain may exec the file and transition to the new domain.
+#line 5
+allow init installd_exec:file { getattr open read execute };
+#line 5
+allow init installd:process transition;
+#line 5
+# New domain is entered by executing the file.
+#line 5
+allow installd installd_exec:file { entrypoint read execute };
+#line 5
+# New domain can send SIGCHLD to its caller.
+#line 5
+allow installd init:process sigchld;
+#line 5
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 5
+#line 5
+#line 5
+allow init installd:process { siginh rlimitinh };
+#line 5
+
+#line 5
+# Make the transition occur by default.
+#line 5
+type_transition init installd_exec:process installd;
+#line 5
+
+#line 5
+
+#line 5
+type installd_tmpfs, file_type;
+#line 5
+type_transition installd tmpfs:file installd_tmpfs;
+#line 5
+# Map with PROT_EXEC.
+#line 5
+allow installd installd_tmpfs:file { read execute execmod };
+#line 5
+
+#line 5
+
+
+#line 6
+typeattribute installd relabeltodomain;
+#line 6
+
+typeattribute installd mlstrustedsubject;
+allow installd self:capability { chown dac_override fowner fsetid setgid setuid };
+allow installd system_data_file:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+allow installd system_data_file:lnk_file create;
+allow installd dalvikcache_data_file:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+allow installd data_file_type:dir { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } };
+allow installd data_file_type:dir { relabelfrom relabelto };
+allow installd data_file_type:{ { { chr_file blk_file } { file lnk_file sock_file fifo_file } } } { getattr unlink };
+allow installd apk_data_file:file { getattr open read ioctl lock };
+allow installd apk_tmp_file:file { getattr open read ioctl lock };
+allow installd system_file:file { getattr execute execute_no_trans };
+allow installd cgroup:dir { create reparent rmdir setattr { { open getattr read search ioctl } { open search write add_name remove_name } } { getattr link unlink rename } };
+# Check validity of SELinux context before use.
+
+#line 21
+allow installd selinuxfs:dir { open getattr read search ioctl };
+#line 21
+allow installd selinuxfs:file { { getattr open read ioctl lock } { open append write } };
+#line 21
+allow installd kernel:security check_context;
+#line 21
+
+# Read /seapp_contexts and /data/security/seapp_contexts
+
+#line 23
+allow installd security_file:dir { open getattr read search ioctl };
+#line 23
+allow installd security_file:file { getattr open read ioctl lock };
+#line 23
+allow installd security_file:lnk_file read;
+#line 23
+allow installd selinuxfs:dir { open getattr read search ioctl };
+#line 23
+allow installd selinuxfs:file { getattr open read ioctl lock };
+#line 23
+allow installd rootfs:dir { open getattr read search ioctl };
+#line 23
+allow installd rootfs:file { getattr open read ioctl lock };
+#line 23
+
+# ASEC
+allow installd app_data_file:lnk_file { create setattr };
+allow installd asec_apk_file:file { getattr open read ioctl lock };
+allow installd bluetooth_data_file:lnk_file { create setattr };
+allow installd nfc_data_file:lnk_file { create setattr };
+allow installd radio_data_file:lnk_file { create setattr };
+allow installd shell_data_file:lnk_file { create setattr };
+# restorecon /data/data
+allow installd unlabeled:dir relabelfrom;
+allow installd unlabeled:{ file lnk_file sock_file fifo_file } relabelfrom;
+allow installd system_data_file:dir { relabelfrom relabelto };
+allow installd system_data_file:{ file lnk_file sock_file fifo_file } { relabelfrom relabelto };
+allow installd bluetooth_data_file:dir { relabelfrom relabelto };
+allow installd bluetooth_data_file:{ file lnk_file sock_file fifo_file } { relabelfrom relabelto };
+allow installd nfc_data_file:dir { relabelfrom relabelto };
+allow installd nfc_data_file:{ file lnk_file sock_file fifo_file } { relabelfrom relabelto };
+allow installd radio_data_file:dir { relabelfrom relabelto };
+allow installd radio_data_file:{ file lnk_file sock_file fifo_file } { relabelfrom relabelto };
+allow installd app_data_file:dir { relabelfrom relabelto };
+allow installd app_data_file:{ file lnk_file sock_file fifo_file } { relabelfrom relabelto };
+allow installd shell_data_file:dir { relabelfrom relabelto };
+allow installd shell_data_file:{ file lnk_file sock_file fifo_file } { relabelfrom relabelto };
+allow installd app_data_file:file { rename setattr };
+#line 1 "external/sepolicy/servicemanager.te"
+# servicemanager - the Binder context manager
+type servicemanager, domain;
+permissive servicemanager;
+type servicemanager_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init servicemanager_exec:file { getattr open read execute };
+#line 6
+allow init servicemanager:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow servicemanager servicemanager_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow servicemanager init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init servicemanager:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init servicemanager_exec:process servicemanager;
+#line 6
+
+#line 6
+
+#line 6
+type servicemanager_tmpfs, file_type;
+#line 6
+type_transition servicemanager tmpfs:file servicemanager_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow servicemanager servicemanager_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute servicemanager mlstrustedsubject;
+#line 7
+typeattribute servicemanager unconfineddomain;
+#line 7
+
+#line 1 "external/sepolicy/clatd.te"
+# 464xlat daemon
+type clatd, domain;
+permissive clatd;
+type clatd_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init clatd_exec:file { getattr open read execute };
+#line 6
+allow init clatd:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow clatd clatd_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow clatd init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init clatd:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init clatd_exec:process clatd;
+#line 6
+
+#line 6
+
+#line 6
+type clatd_tmpfs, file_type;
+#line 6
+type_transition clatd tmpfs:file clatd_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow clatd clatd_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute clatd netdomain;
+#line 7
+
+
+#line 8
+typeattribute clatd mlstrustedsubject;
+#line 8
+typeattribute clatd unconfineddomain;
+#line 8
+
+#line 1 "external/sepolicy/mtp.te"
+# vpn tunneling protocol manager
+type mtp, domain;
+permissive mtp;
+type mtp_exec, exec_type, file_type;
+
+
+#line 6
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow init mtp_exec:file { getattr open read execute };
+#line 6
+allow init mtp:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow mtp mtp_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow mtp init:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow init mtp:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition init mtp_exec:process mtp;
+#line 6
+
+#line 6
+
+#line 6
+type mtp_tmpfs, file_type;
+#line 6
+type_transition mtp tmpfs:file mtp_tmpfs;
+#line 6
+# Map with PROT_EXEC.
+#line 6
+allow mtp mtp_tmpfs:file { read execute execmod };
+#line 6
+
+#line 6
+
+
+#line 7
+typeattribute mtp netdomain;
+#line 7
+
+
+#line 8
+typeattribute mtp mlstrustedsubject;
+#line 8
+typeattribute mtp unconfineddomain;
+#line 8
+
+#line 1 "external/sepolicy/device.te"
+# Device types
+type device, dev_type, fs_type;
+type akm_device, dev_type;
+type accelerometer_device, dev_type;
+type alarm_device, dev_type, mlstrustedobject;
+type adb_device, dev_type;
+type ashmem_device, dev_type, mlstrustedobject;
+type audio_device, dev_type;
+type binder_device, dev_type, mlstrustedobject;
+type block_device, dev_type;
+type camera_device, dev_type;
+type dm_device, dev_type;
+type loop_device, dev_type;
+type radio_device, dev_type;
+type ram_device, dev_type;
+type console_device, dev_type;
+type cpuctl_device, dev_type;
+type full_device, dev_type;
+type graphics_device, dev_type;
+type input_device, dev_type;
+type kmem_device, dev_type;
+type log_device, dev_type, mlstrustedobject;
+type mtd_device, dev_type;
+type mtp_device, dev_type, mlstrustedobject;
+type nfc_device, dev_type;
+type nv_device, dev_type, mlstrustedobject;
+type powervr_device, dev_type, mlstrustedobject;
+type ptmx_device, dev_type, mlstrustedobject;
+type qemu_device, dev_type;
+type kmsg_device, dev_type;
+type null_device, dev_type, mlstrustedobject;
+type random_device, dev_type;
+type sensors_device, dev_type;
+type serial_device, dev_type;
+type socket_device, dev_type;
+type owntty_device, dev_type, mlstrustedobject;
+type tty_device, dev_type;
+type urandom_device, dev_type;
+type video_device, dev_type;
+type vcs_device, dev_type;
+type zero_device, dev_type;
+type fuse_device, dev_type;
+type iio_device, dev_type;
+type ion_device, dev_type, mlstrustedobject;
+type gps_device, dev_type;
+type qtaguid_device, dev_type;
+type watchdog_device, dev_type;
+type uhid_device, dev_type;
+type tun_device, dev_type, mlstrustedobject;
+type usbaccessory_device, dev_type;
+type usb_device, dev_type;
+type klog_device, dev_type;
+type properties_device, dev_type;
+
+# All devices have a uart for the hci
+# attach service. The uart dev node
+# varies per device. This type
+# is used in per device policy
+type hci_attach_dev, dev_type;
+
+# All devices have a rpmsg device for
+# achieving remoteproc and rpmsg modules
+type rpmsg_device, dev_type;
+#line 1 "external/sepolicy/adbd.te"
+# adbd seclabel is specified in init.rc since
+# it lives in the rootfs and has no unique file type.
+type adbd, domain;
+permissive adbd;
+
+#line 5
+typeattribute adbd mlstrustedsubject;
+#line 5
+typeattribute adbd unconfineddomain;
+#line 5
+
+
+#line 6
+# Allow the necessary permissions.
+#line 6
+
+#line 6
+# Old domain may exec the file and transition to the new domain.
+#line 6
+allow adbd shell_exec:file { getattr open read execute };
+#line 6
+allow adbd shell:process transition;
+#line 6
+# New domain is entered by executing the file.
+#line 6
+allow shell shell_exec:file { entrypoint read execute };
+#line 6
+# New domain can send SIGCHLD to its caller.
+#line 6
+allow shell adbd:process sigchld;
+#line 6
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 6
+#line 6
+#line 6
+allow adbd shell:process { siginh rlimitinh };
+#line 6
+
+#line 6
+# Make the transition occur by default.
+#line 6
+type_transition adbd shell_exec:process shell;
+#line 6
+
+# this is an entrypoint
+allow adbd rootfs:file entrypoint;
+
+# Read /data/misc/adb/adb_keys.
+allow adbd adb_keys_file:dir search;
+allow adbd adb_keys_file:file { getattr open read ioctl lock };
+
+# Allow access in case /data/misc/adb still has the old type.
+allow adbd system_data_file:dir search;
+allow adbd system_data_file:file { getattr open read ioctl lock };
+#line 1 "external/sepolicy/hci_attach.te"
+type hci_attach, domain;
+permissive hci_attach;
+type hci_attach_exec, exec_type, file_type;
+
+
+#line 5
+
+#line 5
+# Allow the necessary permissions.
+#line 5
+
+#line 5
+# Old domain may exec the file and transition to the new domain.
+#line 5
+allow init hci_attach_exec:file { getattr open read execute };
+#line 5
+allow init hci_attach:process transition;
+#line 5
+# New domain is entered by executing the file.
+#line 5
+allow hci_attach hci_attach_exec:file { entrypoint read execute };
+#line 5
+# New domain can send SIGCHLD to its caller.
+#line 5
+allow hci_attach init:process sigchld;
+#line 5
+# Enable AT_SECURE, i.e. libc secure mode.
+#line 5
+#line 5
+#line 5
+allow init hci_attach:process { siginh rlimitinh };
+#line 5
+
+#line 5
+# Make the transition occur by default.
+#line 5
+type_transition init hci_attach_exec:process hci_attach;
+#line 5
+
+#line 5
+
+#line 5
+type hci_attach_tmpfs, file_type;
+#line 5
+type_transition hci_attach tmpfs:file hci_attach_tmpfs;
+#line 5
+# Map with PROT_EXEC.
+#line 5
+allow hci_attach hci_attach_tmpfs:file { read execute execmod };
+#line 5
+
+#line 5
+
+
+#line 6
+typeattribute hci_attach mlstrustedsubject;
+#line 6
+typeattribute hci_attach unconfineddomain;
+#line 6
+
+#line 1 "vendor/cm/sepolicy/ueventd.te"
+# ueventd needs to relabel files that pop in and out of sysfs
+allow ueventd sysfs:file relabelfrom;
+
+# ueventd will set permissions on cpufreq nodes
+allow ueventd sysfs_devices_system_cpu:file setattr;
+
+# ueventd loads wifi firmware on a ton of devices
+allow ueventd wifi_data_file:dir { open getattr read search ioctl };
+allow ueventd wifi_data_file:file { getattr open read ioctl lock };
+
+# ueventd loads audio firmware on many devices
+allow ueventd audio_data_file:dir { open getattr read search ioctl };
+allow ueventd audio_data_file:file { getattr open read ioctl lock };
+#line 1 "vendor/cm/sepolicy/file.te"
+# Support asec containers getting mounted
+allow file_type rootfs:filesystem associate;
+#line 1 "vendor/cm/sepolicy/system.te"
+allow system wallpaper_file:file relabelto;
+#line 1 "vendor/cm/sepolicy/netd.te"
+allow netd self:capability { setuid sys_module setgid };
+allow netd self:packet_socket { create { ioctl read getattr write setattr append bind connect getopt setopt shutdown } };
+allow netd radio_data_file:dir { { open getattr read search ioctl } { open search write add_name remove_name } };
+allow netd radio_data_file:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+#line 1 "vendor/cm/sepolicy/installd.te"
+# Allow querying of asec size on SD card
+allow installd sdcard_external:dir { search };
+allow installd sdcard_external:file { getattr };
+#line 1 "vendor/cm/sepolicy/vold.te"
+# Allow vold to manage ASEC
+allow vold sdcard_external:file { create setattr { { getattr open read ioctl lock } { open append write } } { getattr link unlink rename } };
+
+# Allow vold to change context for mounted ext4 sdcard
+
+#line 5
+typeattribute vold relabeltodomain;
+#line 5
+
+allow vold labeledfs:filesystem { relabelfrom };
+allow vold sdcard_external:filesystem { relabelfrom relabelto };
+
+# Allow vold to access fuse for fuse-based fs
+allow vold fuse_device:chr_file { { getattr open read ioctl lock } { open append write } };
+
+# NTFS-3g wants to drop permission
+allow vold self:capability { setgid setuid };
+#line 1 "external/sepolicy/roles"
+role r;
+role r types domain;
+#line 1 "external/sepolicy/users"
+user u roles { r } level s0 range s0 - s0:c0.c1023;
+#line 1 "external/sepolicy/initial_sid_contexts"
+sid kernel u:r:kernel:s0
+sid security u:object_r:kernel:s0
+sid unlabeled u:object_r:unlabeled:s0
+sid fs u:object_r:labeledfs:s0
+sid file u:object_r:unlabeled:s0
+sid file_labels u:object_r:unlabeled:s0
+sid init u:object_r:unlabeled:s0
+sid any_socket u:object_r:unlabeled:s0
+sid port u:object_r:port:s0
+sid netif u:object_r:netif:s0
+sid netmsg u:object_r:unlabeled:s0
+sid node u:object_r:node:s0
+sid igmp_packet u:object_r:unlabeled:s0
+sid icmp_socket u:object_r:unlabeled:s0
+sid tcp_socket u:object_r:unlabeled:s0
+sid sysctl_modprobe u:object_r:unlabeled:s0
+sid sysctl u:object_r:proc:s0
+sid sysctl_fs u:object_r:unlabeled:s0
+sid sysctl_kernel u:object_r:unlabeled:s0
+sid sysctl_net u:object_r:unlabeled:s0
+sid sysctl_net_unix u:object_r:unlabeled:s0
+sid sysctl_vm u:object_r:unlabeled:s0
+sid sysctl_dev u:object_r:unlabeled:s0
+sid kmod u:object_r:unlabeled:s0
+sid policy u:object_r:unlabeled:s0
+sid scmp_packet u:object_r:unlabeled:s0
+sid devnull u:object_r:null_device:s0
+#line 1 "external/sepolicy/fs_use"
+# Label inodes via getxattr.
+fs_use_xattr yaffs2 u:object_r:labeledfs:s0;
+fs_use_xattr jffs2 u:object_r:labeledfs:s0;
+fs_use_xattr ext2 u:object_r:labeledfs:s0;
+fs_use_xattr ext3 u:object_r:labeledfs:s0;
+fs_use_xattr ext4 u:object_r:labeledfs:s0;
+fs_use_xattr xfs u:object_r:labeledfs:s0;
+fs_use_xattr btrfs u:object_r:labeledfs:s0;
+
+# Label inodes from task label.
+fs_use_task pipefs u:object_r:pipefs:s0;
+fs_use_task sockfs u:object_r:sockfs:s0;
+
+# Label inodes from combination of task label and fs label.
+# Define type_transition rules if you want per-domain types.
+fs_use_trans devpts u:object_r:devpts:s0;
+fs_use_trans tmpfs u:object_r:tmpfs:s0;
+fs_use_trans devtmpfs u:object_r:device:s0;
+fs_use_trans shm u:object_r:shm:s0;
+fs_use_trans mqueue u:object_r:mqueue:s0;
+
+#line 1 "vendor/cm/sepolicy/fs_use"
+# Label inodes via getxattr.
+fs_use_xattr f2fs u:object_r:labeledfs:s0;
+
+#line 1 "external/sepolicy/genfs_contexts"
+# Label inodes with the fs label.
+genfscon rootfs / u:object_r:rootfs:s0
+# proc labeling can be further refined (longest matching prefix).
+genfscon proc / u:object_r:proc:s0
+genfscon proc /net/xt_qtaguid/ctrl u:object_r:qtaguid_proc:s0
+# selinuxfs booleans can be individually labeled.
+genfscon selinuxfs / u:object_r:selinuxfs:s0
+genfscon cgroup / u:object_r:cgroup:s0
+# sysfs labels can be set by userspace.
+genfscon sysfs / u:object_r:sysfs:s0
+genfscon inotifyfs / u:object_r:inotify:s0
+genfscon vfat / u:object_r:sdcard_external:s0
+genfscon debugfs / u:object_r:debugfs:s0
+genfscon fuse / u:object_r:sdcard_internal:s0
+#line 1 "vendor/cm/sepolicy/genfs_contexts"
+genfscon fuseblk / u:object_r:sdcard_external:s0
+#line 1 "external/sepolicy/port_contexts"
+# portcon statements go here, e.g.
+# portcon tcp 80 u:object_r:http_port:s0
+

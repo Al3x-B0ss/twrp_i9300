@@ -1,0 +1,5 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libpixelflinger_static_intermediates/col32cb16blend.o: \
+ system/core/libpixelflinger/col32cb16blend.S \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h
+ system/core/libpixelflinger/col32cb16blend.S :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :

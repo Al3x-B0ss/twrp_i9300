@@ -1,0 +1,7 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libjpeg_static_intermediates/armv6_idct.o: \
+ external/jpeg/armv6_idct.S \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ bionic/libc/arch-arm/include/machine/cpu-features.h
+ external/jpeg/armv6_idct.S :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ bionic/libc/arch-arm/include/machine/cpu-features.h :

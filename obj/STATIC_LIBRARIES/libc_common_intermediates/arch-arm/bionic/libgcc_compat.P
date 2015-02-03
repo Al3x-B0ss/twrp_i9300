@@ -1,0 +1,5 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libc_common_intermediates/arch-arm/bionic/libgcc_compat.o: \
+ bionic/libc/arch-arm/bionic/libgcc_compat.c \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h
+ bionic/libc/arch-arm/bionic/libgcc_compat.c :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :

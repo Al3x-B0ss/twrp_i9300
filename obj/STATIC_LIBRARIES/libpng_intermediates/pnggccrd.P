@@ -1,0 +1,5 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libpng_intermediates/pnggccrd.o: \
+  external/libpng/pnggccrd.c \
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h
+  external/libpng/pnggccrd.c :
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h :

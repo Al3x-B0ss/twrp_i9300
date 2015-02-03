@@ -1,0 +1,11 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libm_intermediates/upstream-freebsd/lib/msun/src/s_creal.o: \
+ bionic/libm/upstream-freebsd/lib/msun/src/s_creal.c \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ bionic/libm/include/complex.h bionic/libc/include/sys/cdefs.h \
+ bionic/libc/include/sys/cdefs_elf.h \
+ bionic/libc/include/android/api-level.h
+ bionic/libm/upstream-freebsd/lib/msun/src/s_creal.c :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ bionic/libm/include/complex.h bionic/libc/include/sys/cdefs.h :
+ bionic/libc/include/sys/cdefs_elf.h :
+ bionic/libc/include/android/api-level.h :

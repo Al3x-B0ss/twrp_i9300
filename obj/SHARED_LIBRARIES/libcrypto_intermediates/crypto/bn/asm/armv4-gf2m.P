@@ -1,0 +1,7 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/SHARED_LIBRARIES/libcrypto_intermediates/crypto/bn/asm/armv4-gf2m.o: \
+  external/openssl/crypto/bn/asm/armv4-gf2m.S \
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+  external/openssl/crypto/arm_arch.h
+  external/openssl/crypto/bn/asm/armv4-gf2m.S :
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+  external/openssl/crypto/arm_arch.h :

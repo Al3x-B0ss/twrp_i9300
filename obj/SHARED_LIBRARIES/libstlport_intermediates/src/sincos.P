@@ -1,0 +1,53 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/SHARED_LIBRARIES/libstlport_intermediates/src/sincos.o: \
+ external/stlport/src/sincos.c \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ external/stlport/stlport/math.h external/stlport/stlport/stl/_cprolog.h \
+ external/stlport/stlport/stl/config/features.h \
+ external/stlport/stlport/stl/_stlport_version.h \
+ external/stlport/stlport/stl/config/user_config.h \
+ external/stlport/stlport/stl/config/compat.h \
+ external/stlport/stlport/stl/config/host.h \
+ external/stlport/stlport/stl/config/_system.h \
+ external/stlport/stlport/stl/config/_android.h \
+ external/stlport/stlport/stl/config/_gcc.h \
+ external/stlport/stlport/stl/config/stl_confix.h \
+ external/stlport/stlport/stl/config/_native_headers.h \
+ bionic/libm/include/../include/math.h bionic/libc/include/sys/cdefs.h \
+ bionic/libc/include/sys/cdefs_elf.h \
+ bionic/libc/include/android/api-level.h bionic/libc/include/sys/_types.h \
+ bionic/libc/arch-arm/include/machine/_types.h \
+ external/stlport/stlport/limits.h \
+ bionic/libc/include/../include/limits.h bionic/libc/include/sys/limits.h \
+ bionic/libc/kernel/common/linux/limits.h \
+ bionic/libc/arch-arm/include/machine/internal_types.h \
+ bionic/libc/arch-arm/include/machine/limits.h \
+ bionic/libc/include/sys/syslimits.h \
+ bionic/libc/kernel/arch-arm/asm/page.h \
+ external/stlport/stlport/stl/_epilog.h \
+ external/stlport/stlport/stl/_config_compat_post.h
+ external/stlport/src/sincos.c :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ external/stlport/stlport/math.h external/stlport/stlport/stl/_cprolog.h :
+ external/stlport/stlport/stl/config/features.h :
+ external/stlport/stlport/stl/_stlport_version.h :
+ external/stlport/stlport/stl/config/user_config.h :
+ external/stlport/stlport/stl/config/compat.h :
+ external/stlport/stlport/stl/config/host.h :
+ external/stlport/stlport/stl/config/_system.h :
+ external/stlport/stlport/stl/config/_android.h :
+ external/stlport/stlport/stl/config/_gcc.h :
+ external/stlport/stlport/stl/config/stl_confix.h :
+ external/stlport/stlport/stl/config/_native_headers.h :
+ bionic/libm/include/../include/math.h bionic/libc/include/sys/cdefs.h :
+ bionic/libc/include/sys/cdefs_elf.h :
+ bionic/libc/include/android/api-level.h bionic/libc/include/sys/_types.h :
+ bionic/libc/arch-arm/include/machine/_types.h :
+ external/stlport/stlport/limits.h :
+ bionic/libc/include/../include/limits.h bionic/libc/include/sys/limits.h :
+ bionic/libc/kernel/common/linux/limits.h :
+ bionic/libc/arch-arm/include/machine/internal_types.h :
+ bionic/libc/arch-arm/include/machine/limits.h :
+ bionic/libc/include/sys/syslimits.h :
+ bionic/libc/kernel/arch-arm/asm/page.h :
+ external/stlport/stlport/stl/_epilog.h :
+ external/stlport/stlport/stl/_config_compat_post.h :

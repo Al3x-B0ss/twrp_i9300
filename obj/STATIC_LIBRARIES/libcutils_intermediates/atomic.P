@@ -1,0 +1,15 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/STATIC_LIBRARIES/libcutils_intermediates/atomic.o: \
+ system/core/libcutils/atomic.c \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ system/core/include/cutils/atomic-inline.h \
+ system/core/include/cutils/atomic-arm.h bionic/libc/include/stdint.h \
+ /home/lanimereala/android/system/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7/bin/../lib/gcc/arm-linux-androideabi/4.7/include/stddef.h \
+ bionic/libc/include/sys/_types.h \
+ bionic/libc/arch-arm/include/machine/_types.h
+ system/core/libcutils/atomic.c :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ system/core/include/cutils/atomic-inline.h :
+ system/core/include/cutils/atomic-arm.h bionic/libc/include/stdint.h :
+ /home/lanimereala/android/system/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7/bin/../lib/gcc/arm-linux-androideabi/4.7/include/stddef.h :
+ bionic/libc/include/sys/_types.h :
+ bionic/libc/arch-arm/include/machine/_types.h :

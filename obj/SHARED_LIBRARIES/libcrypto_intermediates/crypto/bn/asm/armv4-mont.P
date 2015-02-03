@@ -1,0 +1,5 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/SHARED_LIBRARIES/libcrypto_intermediates/crypto/bn/asm/armv4-mont.o: \
+  external/openssl/crypto/bn/asm/armv4-mont.S \
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h
+  external/openssl/crypto/bn/asm/armv4-mont.S :
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h :

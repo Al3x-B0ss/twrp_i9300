@@ -1,0 +1,11 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/SHARED_LIBRARIES/libcrypto_intermediates/crypto/rc2/rc2_cbc.o: \
+  external/openssl/crypto/rc2/rc2_cbc.c \
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+  external/openssl/include/openssl/rc2.h \
+  external/openssl/include/openssl/opensslconf.h \
+  external/openssl/crypto/rc2/rc2_locl.h
+  external/openssl/crypto/rc2/rc2_cbc.c :
+  build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+  external/openssl/include/openssl/rc2.h :
+  external/openssl/include/openssl/opensslconf.h :
+  external/openssl/crypto/rc2/rc2_locl.h :

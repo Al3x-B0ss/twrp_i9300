@@ -1,0 +1,11 @@
+/home/lanimereala/android/system/out/target/product/i9300/obj/SHARED_LIBRARIES/libdl_intermediates/libdl.o: \
+ bionic/libdl/libdl.c \
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h \
+ bionic/libc/include/dlfcn.h bionic/libc/include/sys/cdefs.h \
+ bionic/libc/include/sys/cdefs_elf.h \
+ bionic/libc/include/android/api-level.h
+ bionic/libdl/libdl.c :
+ build/core/combo/include/arch/linux-arm/AndroidConfig.h :
+ bionic/libc/include/dlfcn.h bionic/libc/include/sys/cdefs.h :
+ bionic/libc/include/sys/cdefs_elf.h :
+ bionic/libc/include/android/api-level.h :
